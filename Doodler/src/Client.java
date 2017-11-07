@@ -11,9 +11,13 @@ public class Client implements Runnable {
 	private String un = null;
 
 	public Client(String serverName, int port) {
-		System.out.println("Connecting...");
+		System.out.println("Connecting...");Scanner sc = new Scanner(System.in);
+		System.out.print("Enter username: "); //temporary (username should be asked on client-side)
+		un = sc.nextLine();
 		try {
 			socket = new Socket(serverName, port);
+			out = new DataOutputStream(socket.getOutputStream());
+			out.writeUTF(un);
 			start(); //start once connected
 		}catch(Exception e) {}
 	}
@@ -68,3 +72,4 @@ public class Client implements Runnable {
 		client = new Client(serverName,port);
 	}
 }
+

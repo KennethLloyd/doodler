@@ -38,11 +38,15 @@ public class Server implements Runnable {
 		}
 	}
 
-	private void addThread(Socket socket) {
-		Scanner sc = new Scanner(System.in);
-		System.out.print("Enter username: "); //temporary (username should be asked on client-side)
-		String un = sc.nextLine();
-		clients.add(new ServerThread(this,socket,un)); //initialize these parameters to the thread
+	private void addThread(Socket socket) throws IOException {
+//		Scanner sc = new Scanner(System.in);
+//		System.out.print("Enter username: "); //temporary (username should be asked on client-side)
+//		String un = sc.nextLine();
+//		
+		DataInputStream name = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
+		
+		System.out.println(name.readUTF());
+		clients.add(new ServerThread(this,socket,name.readUTF())); //initialize these parameters to the thread
 		try {
 			clients.get(clients.size()-1).open(); //open for reading and writing the newly added client
 			clients.get(clients.size()-1).start(); //start the client thread
@@ -85,3 +89,4 @@ public class Server implements Runnable {
 		server = new Server(port);
 	}
 }
+
