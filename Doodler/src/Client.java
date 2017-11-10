@@ -10,10 +10,9 @@ public class Client implements Runnable {
 	private ClientThread client = null;
 	private String un = null;
 
-	public Client(String serverName, int port) {
-		System.out.println("Connecting...");Scanner sc = new Scanner(System.in);
-		System.out.print("Enter username: "); //temporary (username should be asked on client-side)
-		un = sc.nextLine();
+	public Client(String serverName, int port, String un) {
+		System.out.println("Connecting...");
+		System.out.println("Enter to continue");
 		try {
 			socket = new Socket(serverName, port);
 			out = new DataOutputStream(socket.getOutputStream());
@@ -25,8 +24,12 @@ public class Client implements Runnable {
 	public void run() {
 		while (thread != null) {
 			try {
-				out.writeUTF(in); //send the input to server to be distributed
-				out.flush();
+				if(!in.isEmpty()){
+					out.writeUTF(in); //send the input to server to be distributed
+					out.flush();
+					in = "";
+				}
+				
 				start(); //avoid loop printing
 			}catch(Exception e) {}
 		}
@@ -44,8 +47,7 @@ public class Client implements Runnable {
 
 	public void start() throws IOException {
 		//ask for input
-		Scanner sc = new Scanner(System.in);
-		in = sc.nextLine();
+		
 		out = new DataOutputStream(socket.getOutputStream()); //for server
 		if (thread == null) {
 			client = new ClientThread(this, socket);
@@ -53,7 +55,11 @@ public class Client implements Runnable {
 			thread.start();
 		}
 	}
-
+	public void send(String message){
+		in = message;
+	}
+	
+	
 	public void stop() {
 		if (thread != null) {
 			//thread.stop();
@@ -65,11 +71,5 @@ public class Client implements Runnable {
 		}catch(Exception e) {}
 	}
 
-	public static void main(String[] args) {
-		Client client = null;
-		String serverName = args[0];
-		int port = Integer.parseInt(args[1]);
-		client = new Client(serverName,port);
-	}
 }
 

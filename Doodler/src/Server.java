@@ -19,7 +19,9 @@ public class Server implements Runnable {
 		while (thread != null) {
 			try {
 				System.out.println("Waiting..."); //wait for a client
-				addThread(server.accept()); //then add it to arraylist
+				Socket s = server.accept();
+				DataInputStream name = new DataInputStream(new BufferedInputStream(s.getInputStream()));
+				addThread(s,name.readUTF()); //then add it to arraylist
 			}catch(Exception e) {}
 		}
 	}
@@ -38,15 +40,15 @@ public class Server implements Runnable {
 		}
 	}
 
-	private void addThread(Socket socket) throws IOException {
+	private void addThread(Socket socket, String name) throws IOException {
 //		Scanner sc = new Scanner(System.in);
 //		System.out.print("Enter username: "); //temporary (username should be asked on client-side)
 //		String un = sc.nextLine();
 //		
-		DataInputStream name = new DataInputStream(new BufferedInputStream(socket.getInputStream()));
 		
-		System.out.println(name.readUTF());
-		clients.add(new ServerThread(this,socket,name.readUTF())); //initialize these parameters to the thread
+		
+		System.out.println(name);
+		clients.add(new ServerThread(this,socket,name)); //initialize these parameters to the thread
 		try {
 			clients.get(clients.size()-1).open(); //open for reading and writing the newly added client
 			clients.get(clients.size()-1).start(); //start the client thread
