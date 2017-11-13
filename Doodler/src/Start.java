@@ -32,8 +32,8 @@ public class Start {
 				String name = uname.getText();//"lois";
 				
 				try {
-					client = new Client(serverName,portno,name);
-					UI window = new UI(name, client);
+					//client = new Client1(serverName,portno,name);
+					client = new Client(name, serverName,portno);
 					//client.setUI(window);
 					
 				} catch (Exception e1) {

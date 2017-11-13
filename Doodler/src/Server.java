@@ -4,7 +4,6 @@ import java.io.*;
 
 public class Server implements Runnable {
 	private static ArrayList<ServerThread> clients = new ArrayList<ServerThread>();
-	private static ArrayList<UI> uis = new ArrayList<UI>();
 	private ServerSocket server = null;
 	private Thread thread = null;
 	public static int uiCount = 0;
@@ -28,12 +27,6 @@ public class Server implements Runnable {
 		}
 	}
 	
-	public static void addUI(UI ui) {
-		uis.add(ui);
-		System.out.println("Added ui");
-		Server.uiCount++;
-	}
-
 	public void start() { //will only run in the beginning
 		if (thread == null) {
 			thread = new Thread(this);
@@ -70,13 +63,7 @@ public class Server implements Runnable {
 		}
 		else {*/
 			for (int i=0;i<clients.size();i++) { //send inputs of each client to every clients
-				System.out.println("Disr");
 				clients.get(i).send(un + ": " + input);
-				//uis.get(i).getChatArea().append("SJSJSJS");
-				if (!uis.isEmpty()) {
-					System.out.println("Not empty");
-				}
-				System.out.println("Finished dist: " + uiCount);
 			}
 		//}
 	}
@@ -105,4 +92,3 @@ public class Server implements Runnable {
 		server = new Server(port);
 	}
 }
-
