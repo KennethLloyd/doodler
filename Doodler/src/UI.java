@@ -17,6 +17,7 @@ public class UI {
 	private String un;
 	private Text chatArea;
 	private Client client;
+	private Server server;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -24,7 +25,7 @@ public class UI {
 	 */
 	public UI(String uname, Client client){
 		this.un = uname;
-		this.client= client;
+		this.client = client;
 		open();
 	}
 	public Client getClient(){
@@ -33,6 +34,7 @@ public class UI {
 	/**
 	 * @wbp.parser.entryPoint
 	 */
+	
 	public void open() {
 		Display display = Display.getDefault();
 		Shell shell = new Shell();
@@ -47,6 +49,7 @@ public class UI {
 					if(!textArea.getText().isEmpty()){
 						String message = textArea.getText()+"\n";
 						chatArea.append(un+": "+ message);
+						textArea.setText("");
 						client.send(message);
 					}	
 				}
@@ -65,7 +68,7 @@ public class UI {
 		toolBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
 		toolBar.setBounds(86, 199, 224, 23);
 		
-		Button btnBlack = new Button(shell, SWT.NONE);
+		/*Button btnBlack = new Button(shell, SWT.NONE);
 		btnBlack.setBounds(86, 197, 75, 25);
 		btnBlack.setText("Black");
 		
@@ -75,10 +78,13 @@ public class UI {
 		
 		Button btnRed_1 = new Button(shell, SWT.NONE);
 		btnRed_1.setBounds(235, 197, 75, 25);
-		btnRed_1.setText("Blue");
+		btnRed_1.setText("Blue");*/
 		
 		chatArea = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
 		chatArea.setBounds(316, 21, 108, 178);
+		
+		//client.setUI(this);
+		Server.addUI(this);
 
 		shell.open();
 		shell.layout();
@@ -87,6 +93,10 @@ public class UI {
 				display.sleep();
 			}
 		}
+	}
+	
+	public Text getChatArea() {
+		return this.chatArea;
 	}
 
 }

@@ -28,13 +28,13 @@ public class Start {
 			public void mouseDown(MouseEvent e) {
 				Client client = null;
 				String serverName = /*ip.getText();*/"127.0.0.1";
-				int portno = 80;//Integer.parseInt(port.getText());
+				int portno = 12345;//Integer.parseInt(port.getText());
 				String name = uname.getText();//"lois";
 				
 				try {
-					//
 					client = new Client(serverName,portno,name);
 					UI window = new UI(name, client);
+					//client.setUI(window);
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();

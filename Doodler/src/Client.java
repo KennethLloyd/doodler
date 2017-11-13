@@ -1,6 +1,9 @@
 import java.net.*;
 import java.util.*;
+import java.awt.Color;
 import java.io.*;
+
+import org.eclipse.swt.widgets.Text;
 
 public class Client implements Runnable {
 	private Socket socket = null;
@@ -9,6 +12,7 @@ public class Client implements Runnable {
 	private DataOutputStream out = null;
 	private ClientThread client = null;
 	private String un = null;
+	private UI ui = null;
 
 	public Client(String serverName, int port, String un) {
 		System.out.println("Connecting...");
@@ -17,8 +21,19 @@ public class Client implements Runnable {
 			socket = new Socket(serverName, port);
 			out = new DataOutputStream(socket.getOutputStream());
 			out.writeUTF(un);
+			int id = socket.getPort();
+			System.out.println("Client id: " + id);
 			start(); //start once connected
 		}catch(Exception e) {}
+	}
+	
+	public void setUI(UI ui) {
+		System.out.println("Set ui");
+		this.ui = ui;
+	}
+	
+	public UI getUI() {
+		return this.ui;
 	}
 
 	public void run() {
@@ -28,14 +43,15 @@ public class Client implements Runnable {
 					out.writeUTF(in); //send the input to server to be distributed
 					out.flush();
 					in = "";
+					Thread.sleep(1000);
 				}
 				
-				start(); //avoid loop printing
+				start(); //start another receiver
 			}catch(Exception e) {}
 		}
 	}
 
-	public void handle(String msg) {
+	public void handle(String msg) { //prints the message for itself (from ClientThread)
 		if (msg.equals("bye")) {
 			System.out.println("Bye");
 			stop();

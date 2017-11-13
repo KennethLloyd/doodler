@@ -16,6 +16,7 @@ public class ServerThread extends Thread {
 		this.socket = socket;
 		this.un = un;
 		id = socket.getPort();
+		System.out.println("ServerThread id: " + id);
 	}
 
 	public void send(String msg) { //sender
@@ -33,7 +34,7 @@ public class ServerThread extends Thread {
 		System.out.println(id + " running");
 		while(true) {
 			try {
-				server.handle(un, in.readUTF()); //pass the received message to server
+				Server.handle(un, in.readUTF()); //pass the received message to server
 			}catch(Exception e) {}
 		}
 	}
