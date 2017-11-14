@@ -24,7 +24,7 @@ public class Start implements MouseListener {
 		shell.setSize(262, 228);
 		shell.setText("SWT Application");*/
 		JTextField port = new JTextField(10);
-		JTextField ip = new JTextField(10);
+		final JTextField ip = new JTextField(10);
 		final JTextField uname = new JTextField(10);
 		
 		JFrame frame = new JFrame("Start");
@@ -33,13 +33,14 @@ public class Start implements MouseListener {
 		frame.pack();
 		frame.setLayout(new FlowLayout());
 		Container container = frame.getContentPane();
-		
+		JPanel panel = new JPanel();
+		panel.setLayout(new GridLayout(0,1));
 		JButton btnNewButton = new JButton("Connect");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Client client = null;
-				String serverName = /*ip.getText();*/"127.0.0.1";
-				int portno = 12345;//Integer.parseInt(port.getText());
+				String serverName = ip.getText();//*/"127.0.0.1";
+				int portno = 1234;//Integer.parseInt(port.getText());
 				String name = uname.getText();//"lois";
 				
 				try {
@@ -70,13 +71,15 @@ public class Start implements MouseListener {
 		JLabel unameLbl = new JLabel("Username: ");
 		unameLbl.setBounds(10, 94, 55, 15);
 
-		container.add(ipLbl);
-		container.add(ip);
-		container.add(portLbl);
-		container.add(port);
-		container.add(unameLbl);
-		container.add(uname);
-		container.add(btnNewButton);
+		panel.add(ipLbl);
+		panel.add(ip);
+		panel.add(portLbl);
+		panel.add(port);
+		panel.add(unameLbl);
+		panel.add(uname);
+		panel.add(btnNewButton);
+		
+		container.add(panel);
 		
 		frame.setVisible(true);
 	}
