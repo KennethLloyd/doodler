@@ -1,4 +1,5 @@
 import javax.swing.*;
+import java.awt.*;
 
 import java.awt.*;
 import java.awt.event.*;
@@ -10,6 +11,7 @@ public class Client extends JFrame implements Runnable {
 	private static JTextField textArea;
 	private String un;
 	private JTextArea chatArea;
+	private Canvas canvas;
 	private Server server;
 	
 	private Socket socket = null;
@@ -18,6 +20,12 @@ public class Client extends JFrame implements Runnable {
 	private DataOutputStream out = null;
 	private ClientThread client = null;
 	private Container container = null;
+	private JPanel chatbox = null;
+	private JPanel canvasArea = null;
+	private JPanel buttonArea = null;
+	private JButton colorButton1 = null;
+	private JButton colorButton2 = null;
+	private JButton colorButton3 = null;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -25,12 +33,28 @@ public class Client extends JFrame implements Runnable {
 	 */
 	public Client(String uname, String serverName, int portno) {
 		super("Doodler");
-		this.setSize(500,500);
-		this.setLayout(new FlowLayout());
+		this.setPreferredSize(new Dimension(900,500));
+		this.setResizable(false);
+		this.setLayout(new BorderLayout());
 		this.container = this.getContentPane();
 		this.un = uname;
 		System.out.println("Connecting...");
 		System.out.println("Enter to continue");
+		
+	    canvas = new Canvas();
+	    canvas.setBackground(Color.white);
+	    canvasArea = new JPanel(new BorderLayout());
+	    canvasArea.add(canvas, BorderLayout.CENTER);
+	    buttonArea = new JPanel(new FlowLayout());
+	    colorButton1 = new JButton("red");
+	    colorButton2 = new JButton("blue");
+	    colorButton3 = new JButton("black");
+	    buttonArea.add(colorButton1);
+	    buttonArea.add(colorButton2);
+	    buttonArea.add(colorButton3);
+	    this.container.add(canvasArea, BorderLayout.CENTER);
+	    this.container.add(buttonArea, BorderLayout.SOUTH);
+		
 		try {
 			socket = new Socket(serverName, portno);
 			out = new DataOutputStream(socket.getOutputStream());
@@ -103,15 +127,19 @@ public class Client extends JFrame implements Runnable {
 	}
 	
 	public void open() {
-		chatArea = new JTextArea(5,20);
+		chatArea = new JTextArea(20, 20);
 		JScrollPane sp = new JScrollPane(chatArea);
 		chatArea.setEditable(false);
 		
-		textArea = new JTextField(20);
+		textArea = new JTextField();
 		textArea.setEditable(true);
 		
-		this.container.add(chatArea);
-		this.container.add(textArea);
+		chatbox = new JPanel(new BorderLayout());
+		
+		chatbox.add(chatArea, BorderLayout.CENTER);
+		chatbox.add(textArea, BorderLayout.SOUTH);
+		
+		this.container.add(chatbox, BorderLayout.EAST);
 		
 		textArea.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e){
