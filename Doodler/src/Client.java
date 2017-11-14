@@ -1,4 +1,6 @@
 import javax.swing.*;
+import javax.swing.border.Border;
+
 import java.awt.*;
 
 import java.awt.*;
@@ -26,6 +28,10 @@ public class Client extends JFrame implements Runnable {
 	private JButton colorButton1 = null;
 	private JButton colorButton2 = null;
 	private JButton colorButton3 = null;
+	private JPanel scoreBoard = null;
+	private JLabel player1 = null;
+	private JLabel player2 = null;
+	private JLabel player3 = null;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -33,13 +39,27 @@ public class Client extends JFrame implements Runnable {
 	 */
 	public Client(String uname, String serverName, int portno) {
 		super("Doodler");
-		this.setPreferredSize(new Dimension(900,500));
+		this.setPreferredSize(new Dimension(1000,600));
 		this.setResizable(false);
+		this.pack();
 		this.setLayout(new BorderLayout());
 		this.container = this.getContentPane();
 		this.un = uname;
 		System.out.println("Connecting...");
 		System.out.println("Enter to continue");
+		
+		scoreBoard = new JPanel();
+		
+		scoreBoard.setBackground(Color.GRAY);
+		scoreBoard.setPreferredSize(new Dimension(200, 100));
+		player1 = new JLabel("Player 1: 100");
+		player2 = new JLabel("Player 2: 100");
+		player3 = new JLabel("Player 3: 100");
+		scoreBoard.add(player1);
+		scoreBoard.add(player2);
+		scoreBoard.add(player3);
+		this.container.add(scoreBoard, BorderLayout.WEST);
+		
 		
 	    canvas = new Canvas();
 	    canvas.setBackground(Color.white);
@@ -128,6 +148,9 @@ public class Client extends JFrame implements Runnable {
 	
 	public void open() {
 		chatArea = new JTextArea(20, 20);
+		Border border = BorderFactory.createLineBorder(Color.darkGray);
+		chatArea.setBorder(BorderFactory.createCompoundBorder(border, 
+	            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		JScrollPane sp = new JScrollPane(chatArea);
 		chatArea.setEditable(false);
 		
