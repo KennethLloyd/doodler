@@ -52,8 +52,8 @@ public class Client extends JFrame implements Runnable {
 	    buttonArea.add(colorButton1);
 	    buttonArea.add(colorButton2);
 	    buttonArea.add(colorButton3);
+	    canvasArea.add(buttonArea, BorderLayout.SOUTH);
 	    this.container.add(canvasArea, BorderLayout.CENTER);
-	    this.container.add(buttonArea, BorderLayout.SOUTH);
 		
 		try {
 			socket = new Socket(serverName, portno);
