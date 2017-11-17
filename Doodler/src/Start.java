@@ -44,9 +44,7 @@ public class Start implements MouseListener {
 				String name = uname.getText();//"lois";
 				
 				try {
-					//client = new Client1(serverName,portno,name);
 					client = new Client(name, serverName,portno);
-					//client.setUI(window);
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();

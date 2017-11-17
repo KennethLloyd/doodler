@@ -2,7 +2,6 @@ import javax.swing.*;
 import javax.swing.border.Border;
 
 import java.awt.*;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.io.DataOutputStream;
@@ -13,8 +12,9 @@ public class Client extends JFrame implements Runnable {
 	private static JTextField textArea;
 	private String un;
 	private JTextArea chatArea;
-	private Canvas canvas;
-	private Server server;
+	private JPanel canvas;
+	private ChatServer server;
+	private String serverName;
 	
 	private Socket socket = null;
 	private Thread thread = null;
@@ -32,6 +32,7 @@ public class Client extends JFrame implements Runnable {
 	private JLabel player1 = null;
 	private JLabel player2 = null;
 	private JLabel player3 = null;
+	private GameClient gc = null;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -39,6 +40,7 @@ public class Client extends JFrame implements Runnable {
 	 */
 	public Client(String uname, String serverName, int portno) {
 		super("Doodler");
+		this.serverName = serverName;
 		this.setPreferredSize(new Dimension(1000,600));
 		this.setResizable(false);
 		this.pack();
@@ -60,8 +62,13 @@ public class Client extends JFrame implements Runnable {
 		scoreBoard.add(player3);
 		this.container.add(scoreBoard, BorderLayout.WEST);
 		
-		
-	    canvas = new Canvas();
+		try {
+			gc = new GameClient(serverName, un);
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+	    canvas = gc;
 	    canvas.setBackground(Color.white);
 	    canvasArea = new JPanel(new BorderLayout());
 	    canvasArea.add(canvas, BorderLayout.CENTER);
@@ -168,7 +175,6 @@ public class Client extends JFrame implements Runnable {
 			public void keyPressed(KeyEvent e){
 		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
 		        	String message = textArea.getText()+"\n";
-		        	//chatArea.append(un + ": " + message);
 		        	textArea.setText("");
 		        	send(message);
 		        	
@@ -181,49 +187,6 @@ public class Client extends JFrame implements Runnable {
 		    public void keyReleased(KeyEvent e) {
 		    }
 		});
-		
-		/*textArea.addKeyListener(new KeyAdapter() {
-			@Override
-			public void keyPressed(KeyEvent e) {
-				if(e.keyCode==SWT.CR){
-					if(!textArea.getText().isEmpty()){
-						String message = textArea.getText()+"\n";
-						chatArea.append(un+": "+ message);
-						textArea.setText("");
-						send(message);
-					}	
-				}
-			}
-		});
-		textArea.setBounds(316, 199, 108, 21);
-		
-		Canvas canvas = new Canvas(shell, SWT.NONE);
-		canvas.setBackground(SWTResourceManager.getColor(SWT.COLOR_LIST_SELECTION_TEXT));
-		canvas.setBounds(86, 21, 224, 178);
-		
-		List list = new List(shell, SWT.BORDER);
-		list.setBounds(9, 21, 71, 102);
-		
-		ToolBar toolBar = new ToolBar(shell, SWT.FLAT | SWT.RIGHT);
-		toolBar.setBackground(SWTResourceManager.getColor(SWT.COLOR_WIDGET_LIGHT_SHADOW));
-		toolBar.setBounds(86, 199, 224, 23);
-		
-		/*Button btnBlack = new Button(shell, SWT.NONE);
-		btnBlack.setBounds(86, 197, 75, 25);
-		btnBlack.setText("Black");
-		
-		Button btnRed = new Button(shell, SWT.NONE);
-		btnRed.setBounds(157, 197, 82, 25);
-		btnRed.setText("Red");
-		
-		Button btnRed_1 = new Button(shell, SWT.NONE);
-		btnRed_1.setBounds(235, 197, 75, 25);
-		btnRed_1.setText("Blue");
-		
-		chatArea = new Text(shell, SWT.BORDER | SWT.READ_ONLY | SWT.WRAP | SWT.V_SCROLL);
-		chatArea.setBounds(316, 21, 108, 178);
-		
-		}*/
 	}
 
 }

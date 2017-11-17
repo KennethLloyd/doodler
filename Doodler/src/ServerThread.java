@@ -3,14 +3,14 @@ import java.util.*;
 import java.io.*;
 
 public class ServerThread extends Thread {
-	private Server server = null;
+	private ChatServer server = null;
 	private Socket socket = null;
 	private int id = -1;
 	private DataInputStream in = null;
 	private DataOutputStream out = null;
 	private String un = null;
 
-	public ServerThread(Server server, Socket socket, String un) { //initialize values
+	public ServerThread(ChatServer server, Socket socket, String un) { //initialize values
 		super();
 		this.server = server;
 		this.socket = socket;
@@ -34,7 +34,7 @@ public class ServerThread extends Thread {
 		System.out.println(id + " running");
 		while(true) {
 			try {
-				Server.handle(un, in.readUTF()); //pass the received message to server
+				ChatServer.handle(un, in.readUTF()); //pass the received message to server
 			}catch(Exception e) {}
 		}
 	}
