@@ -68,10 +68,9 @@ public class Client extends JFrame implements Runnable {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	    canvas = gc;
-	    canvas.setBackground(Color.white);
+	    gc.setBackground(Color.white);
 	    canvasArea = new JPanel(new BorderLayout());
-	    canvasArea.add(canvas, BorderLayout.CENTER);
+	    canvasArea.add(gc, BorderLayout.CENTER);
 	    buttonArea = new JPanel(new FlowLayout());
 	    colorButton1 = new JButton("red");
 	    colorButton2 = new JButton("blue");
@@ -135,6 +134,7 @@ public class Client extends JFrame implements Runnable {
 			client = new ClientThread(this, socket);
 			thread = new Thread(this);
 			thread.start();
+			gc.getThread().start();
 		}
 	}
 	public void send(String message){

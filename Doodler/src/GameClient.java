@@ -86,11 +86,13 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}
 			
 		});
-		//create the buffer
-		offscreen=(BufferedImage)this.createImage(640, 480);
 
 		//tiime to play
-		t.start();		
+		//t.start();		
+	}
+	
+	public Thread getThread() {
+		return this.t;
 	}
 	
 	/**
@@ -111,6 +113,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * The juicy part!
 	 */
 	public void run(){
+		//create the buffer
+		offscreen = (BufferedImage)this.createImage(640, 480);
 		while(true){
 			try{
 				Thread.sleep(1);
