@@ -58,6 +58,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 */
 	BufferedImage offscreen;
 	int x1, y1, y2, x2;
+
+	private Color colorSelected;
 	
 	/**
 	 * Basic constructor
@@ -75,11 +77,11 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		this.addMouseMotionListener(new MouseMotionListener() {
 
 			public void mouseDragged(MouseEvent e) {
-				 x2 = e.getX();
-				 y2 = e.getY();
-				 // Now Paint the line
-				 repaint();
-				
+				x=e.getX();y=e.getY();
+				if (prevX != x || prevY != y){
+					send("PLAYER "+name+" "+x+" "+y);
+				}
+				 // Now Paint the line				
 			}
 			
 			public void mousePressed(MouseEvent e) {
@@ -88,10 +90,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}
 
 			public void mouseMoved(MouseEvent me) {
-				x=me.getX();y=me.getY();
-				if (prevX != x || prevY != y){
-					send("PLAYER "+name+" "+x+" "+y);
-				}
+				
 			}
 			
 		});
@@ -151,7 +150,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				System.out.println("Connecting..");				
 				send("CONNECT "+name);
 			}else if (connected){
-				offscreen.getGraphics().clearRect(0, 0, 640, 480);
+				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){
 					String[] playersInfo = serverData.split(":");
 					for (int i=0;i<playersInfo.length;i++){
@@ -160,8 +159,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
-						offscreen.getGraphics().fillOval(x, y, 20, 20);
-						offscreen.getGraphics().drawString(pname,x-10,y+30);					
+						offscreen.getGraphics().fillOval(x, y, 5, 5);					
 					}
 					//show the changes
 					this.repaint();
@@ -174,11 +172,13 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Repainting method
 	 */
 	public void paintComponent(Graphics g){
+		g.setColor(this.colorSelected);
 		g.drawImage(offscreen, 0, 0, null);
-		g.drawLine(x1, y1, x2, y2);
 		
 	}
-	
+	public void changeColor(Color c){
+		this.colorSelected = c;
+	}
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
 			prevX=x;prevY=y;

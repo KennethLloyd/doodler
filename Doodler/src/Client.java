@@ -8,7 +8,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 
-public class Client extends JFrame implements Runnable {
+public class Client extends JFrame implements Runnable, ActionListener {
 	private static JTextField textArea;
 	private String un;
 	private JTextArea chatArea;
@@ -28,6 +28,7 @@ public class Client extends JFrame implements Runnable {
 	private JButton colorButton1 = null;
 	private JButton colorButton2 = null;
 	private JButton colorButton3 = null;
+	private JButton clearButton = null;
 	private JPanel scoreBoard = null;
 	private JLabel player1 = null;
 	private JLabel player2 = null;
@@ -75,9 +76,18 @@ public class Client extends JFrame implements Runnable {
 	    colorButton1 = new JButton("red");
 	    colorButton2 = new JButton("blue");
 	    colorButton3 = new JButton("black");
+	    clearButton = new JButton("clear");
+	    
+	    colorButton1.addActionListener(this);
+	    colorButton2.addActionListener(this);
+	    colorButton3.addActionListener(this);
+	    clearButton.addActionListener(this);
+	    
 	    buttonArea.add(colorButton1);
 	    buttonArea.add(colorButton2);
 	    buttonArea.add(colorButton3);
+	    buttonArea.add(clearButton);
+	    
 	    canvasArea.add(buttonArea, BorderLayout.SOUTH);
 	    this.container.add(canvasArea, BorderLayout.CENTER);
 		
@@ -188,5 +198,23 @@ public class Client extends JFrame implements Runnable {
 		    }
 		});
 	}
+	@Override
+	public void actionPerformed(ActionEvent arg0) {
+		// TODO Auto-generated method stub
+		
+		if(arg0.getSource().equals(colorButton1)){
+			System.out.println("RED");
+			gc.changeColor(Color.RED);
+		}
+		else if(arg0.getSource().equals(colorButton2)){
+			System.out.println("BLUE");
+			gc.changeColor(Color.BLUE);
+		}
+		else if(arg0.getSource().equals(colorButton3)){
+			System.out.println("BLACK");
+			gc.changeColor(Color.BLACK);
+		}
+	}
 
 }
+
