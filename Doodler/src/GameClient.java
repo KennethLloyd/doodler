@@ -57,7 +57,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * real smooth animation :)
 	 */
 	BufferedImage offscreen;
-
+	int x1, y1, y2, x2;
 	
 	/**
 	 * Basic constructor
@@ -68,14 +68,23 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public GameClient(String server,final String name) throws Exception{
 		this.server=server;
 		this.name=name;
+		
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
 		
 		this.addMouseMotionListener(new MouseMotionListener() {
 
 			public void mouseDragged(MouseEvent e) {
-				// TODO Auto-generated method stub
+				 x2 = e.getX();
+				 y2 = e.getY();
+				 // Now Paint the line
+				 repaint();
 				
+			}
+			
+			public void mousePressed(MouseEvent e) {
+				 x1 = e.getX();
+				 y1 = e.getY();
 			}
 
 			public void mouseMoved(MouseEvent me) {
@@ -166,6 +175,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 */
 	public void paintComponent(Graphics g){
 		g.drawImage(offscreen, 0, 0, null);
+		g.drawLine(x1, y1, x2, y2);
+		
 	}
 	
 	class KeyHandler extends KeyAdapter{

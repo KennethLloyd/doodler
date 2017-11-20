@@ -50,7 +50,7 @@ public class Client extends JFrame implements Runnable {
 		System.out.println("Connecting...");
 		System.out.println("Enter to continue");
 		
-		scoreBoard = new JPanel();
+		scoreBoard = new JPanel(new GridLayout(0,1));
 		
 		scoreBoard.setBackground(Color.GRAY);
 		scoreBoard.setPreferredSize(new Dimension(200, 100));
