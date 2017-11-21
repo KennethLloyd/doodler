@@ -30,9 +30,11 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JButton colorButton3 = null;
 	private JButton clearButton = null;
 	private JPanel scoreBoard = null;
+	private JPanel answerPanel = null;
 	private JLabel player1 = null;
 	private JLabel player2 = null;
 	private JLabel player3 = null;
+	private JLabel answer = null;
 	private GameClient gc = null;
 	/**
 	 * Launch the application.
@@ -58,6 +60,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		player1 = new JLabel("Player 1: 100");
 		player2 = new JLabel("Player 2: 100");
 		player3 = new JLabel("Player 3: 100");
+		answer = new JLabel("Answer");
 		scoreBoard.add(player1);
 		scoreBoard.add(player2);
 		scoreBoard.add(player3);
@@ -69,12 +72,16 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	   
+	    
 	    canvasArea = new JPanel(new BorderLayout());
 	    canvasArea.add(gc, BorderLayout.CENTER);
-	    
 	    buttonArea = new JPanel(new FlowLayout());
 	    buttonArea.setBackground(Color.BLACK);
+	    
+	    answerPanel = new JPanel();
+	    answerPanel.setBackground(Color.GREEN);
+	    answerPanel.add(answer);
+	    canvasArea.add(answerPanel, BorderLayout.NORTH);
 	    
 	    colorButton1 = new JButton("red");
 	    colorButton2 = new JButton("blue");
@@ -216,6 +223,10 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		else if(arg0.getSource().equals(colorButton3)){
 			System.out.println("BLACK");
 			gc.changeColor(Color.BLACK);
+		}
+		else if(arg0.getSource().equals(clearButton)){
+			
+			gc.clearPane();
 		}
 	}
 

@@ -39,7 +39,7 @@ public class Start implements MouseListener {
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Client client = null;
-				String serverName = ip.getText();//*/"127.0.0.1";
+				String serverName = /*ip.getText();//*/"127.0.0.1";
 				int portno = 1234;//Integer.parseInt(port.getText());
 				String name = uname.getText();//*/"lois";
 				

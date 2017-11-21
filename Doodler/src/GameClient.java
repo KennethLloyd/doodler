@@ -58,7 +58,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 */
 	BufferedImage offscreen;
 	int x1, y1, y2, x2;
-
+	public static boolean isClear = false;
 	private Color colorSelected;
 	
 	/**
@@ -122,7 +122,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 */
 	public void run(){
 		//create the buffer
-		offscreen = (BufferedImage)this.createImage(640, 480);
+		offscreen = (BufferedImage)this.createImage(640, 640);
 		
 		while(true){
 			try{
@@ -161,12 +161,20 @@ public class GameClient extends JPanel implements Runnable, Constants {
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
 						//offscreen.getGraphics().setColor(this.colorSelected);
+						
+						if(this.isClear){
+							offscreen = (BufferedImage)this.createImage(640, 640);
+							this.isClear = false;
+							repaint();
+						}
 						Graphics gd = offscreen.getGraphics();
 						gd.setColor(this.colorSelected);
-						gd.fillOval(x, y, 5, 5);					
+						gd.fillOval(x, y, 5, 5);		
+						
 					}
 					//show the changes
 					this.repaint();
+					
 				}			
 			}			
 		}
@@ -178,11 +186,15 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public void paintComponent(Graphics g){
 		
 		g.drawImage(offscreen, 0, 0, null);
-		
-		
+
 	}
 	public void changeColor(Color c){
 		this.colorSelected = c;
+	}
+	public void clearPane(){
+		this.isClear = true;
+		offscreen = (BufferedImage)this.createImage(640, 640);
+		repaint();
 	}
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
