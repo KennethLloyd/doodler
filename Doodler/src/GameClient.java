@@ -184,9 +184,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Repainting method
 	 */
 	public void paintComponent(Graphics g){
-		
 		g.drawImage(offscreen, 0, 0, null);
-
 	}
 	public void changeColor(Color c){
 		this.colorSelected = c;
