@@ -73,7 +73,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
-		
+		this.setBackground(Color.BLACK);
 		this.addMouseMotionListener(new MouseMotionListener() {
 
 			public void mouseDragged(MouseEvent e) {
@@ -123,6 +123,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public void run(){
 		//create the buffer
 		offscreen = (BufferedImage)this.createImage(640, 480);
+		
 		while(true){
 			try{
 				Thread.sleep(1);
@@ -160,9 +161,9 @@ public class GameClient extends JPanel implements Runnable, Constants {
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
 						//offscreen.getGraphics().setColor(this.colorSelected);
-						Graphics g = offscreen.getGraphics();
-						g.setColor(this.colorSelected);
-						g.fillOval(x, y, 5, 5);					
+						Graphics gd = offscreen.getGraphics();
+						gd.setColor(this.colorSelected);
+						gd.fillOval(x, y, 5, 5);					
 					}
 					//show the changes
 					this.repaint();

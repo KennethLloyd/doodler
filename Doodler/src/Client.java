@@ -69,10 +69,13 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
-	    gc.setBackground(Color.white);
+	   
 	    canvasArea = new JPanel(new BorderLayout());
 	    canvasArea.add(gc, BorderLayout.CENTER);
+	    
 	    buttonArea = new JPanel(new FlowLayout());
+	    buttonArea.setBackground(Color.BLACK);
+	    
 	    colorButton1 = new JButton("red");
 	    colorButton2 = new JButton("blue");
 	    colorButton3 = new JButton("black");
