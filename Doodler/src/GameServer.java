@@ -5,11 +5,17 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 
+import javax.swing.Timer;
+
+import java.awt.event.*;
+
 public class GameServer implements Runnable, Constants {
 	/**
 	 * Placeholder for the data received from the player
 	 */	 
 	String playerData;
+	
+	int turn = 1;
 	
 	/**
 	 * The number of currently connected player
@@ -41,10 +47,11 @@ public class GameServer implements Runnable, Constants {
 	 */
 	Thread t = new Thread(this);
 	
+	Timer timer = null;
 	/**
 	 * Simple constructor
 	 */
-	public GameServer(int numPlayers){
+	public GameServer(final int numPlayers){
 		this.numPlayers = numPlayers;
 		try {
             serverSocket = new DatagramSocket(PORT);
@@ -58,6 +65,17 @@ public class GameServer implements Runnable, Constants {
 		
 		System.out.println("Game created...");
 		
+		timer = new Timer(10000, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				if (turn != numPlayers) {
+					turn++;
+				}
+				else {
+					turn = 1;
+				}
+			}
+			
+		});
 		//Start the game thread
 		t.start();
 	}
@@ -95,6 +113,7 @@ public class GameServer implements Runnable, Constants {
 	 * The juicy part
 	 */
 	public void run(){
+		int startPos = 1;
 		while(true){
 						
 			// Get the data from players
@@ -121,7 +140,8 @@ public class GameServer implements Runnable, Constants {
 						//System.out.println("Game State: Waiting for players...");
 						if (playerData.startsWith("CONNECT")){
 							String tokens[] = playerData.split(" ");
-							NetPlayer player=new NetPlayer(tokens[1],packet.getAddress(),packet.getPort());
+							NetPlayer player=new NetPlayer(tokens[1],packet.getAddress(),packet.getPort(), startPos);
+							startPos++;
 							System.out.println("Player connected: "+tokens[1]);
 							game.update(tokens[1].trim(),player);
 							broadcast("CONNECTED "+tokens[1]);
@@ -135,6 +155,7 @@ public class GameServer implements Runnable, Constants {
 					  System.out.println("Game State: START");
 					  broadcast("START");
 					  gameStage=IN_PROGRESS;
+					  timer.start();
 					  break;
 				  case IN_PROGRESS:
 					  //System.out.println("Game State: IN_PROGRESS");
@@ -144,17 +165,19 @@ public class GameServer implements Runnable, Constants {
 						  //Tokenize:
 						  //The format: PLAYER <player name> <x> <y>
 						  String[] playerInfo = playerData.split(" ");					  
-						  String pname =playerInfo[1];
+						  String pname = playerInfo[1];
 						  int x = Integer.parseInt(playerInfo[2].trim());
 						  int y = Integer.parseInt(playerInfo[3].trim());
 						  //Get the player from the game state
-						  NetPlayer player=(NetPlayer)game.getPlayers().get(pname);					  
-						  player.setX(x);
-						  player.setY(y);
-						  //Update the game state
-						  game.update(pname, player);
-						  //Send to all the updated game state
-						  broadcast(game.toString());
+						  NetPlayer player=(NetPlayer)game.getPlayers().get(pname);
+						  if (turn == player.getStartPos()) { //can only draw if its their turn
+							  player.setX(x);
+							  player.setY(y);
+							  //Update the game state
+							  game.update(pname, player);
+							  //Send to all the updated game state
+							  broadcast(game.toString());  
+						  }	
 					  }
 					  break;
 			}				  

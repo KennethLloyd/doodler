@@ -20,6 +20,8 @@ public class NetPlayer {
 	 * The position of player
 	 */
 	private int x,y;
+	
+	private int startPos;
 
 	/**
 	 * Constructor
@@ -27,10 +29,12 @@ public class NetPlayer {
 	 * @param address
 	 * @param port
 	 */
-	public NetPlayer(String name,InetAddress address, int port){
+	public NetPlayer(String name,InetAddress address, int port, int startPos){
 		this.address = address;
 		this.port = port;
 		this.name = name;
+		this.startPos = startPos;
+		System.out.println("Player " + this.startPos);
 	}
 
 	/**
@@ -89,6 +93,10 @@ public class NetPlayer {
 	 */
 	public void setY(int y){
 		this.y=y;		
+	}
+	
+	public int getStartPos() {
+		return this.startPos;
 	}
 
 	/**

@@ -165,7 +165,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	
 	public void open() {
 		chatArea = new JTextArea(20, 20);
-		Border border = BorderFactory.createLineBorder(Color.darkGray);
+		Border border = BorderFactory.createLineBorder(Color.darkGray);	
 		chatArea.setBorder(BorderFactory.createCompoundBorder(border, 
 	            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		JScrollPane sp = new JScrollPane(chatArea);
@@ -198,7 +198,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		    }
 		});
 	}
-	@Override
+	//@Override
 	public void actionPerformed(ActionEvent arg0) {
 		// TODO Auto-generated method stub
 		
