@@ -159,7 +159,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
-						offscreen.getGraphics().fillOval(x, y, 5, 5);					
+						//offscreen.getGraphics().setColor(this.colorSelected);
+						Graphics g = offscreen.getGraphics();
+						g.setColor(this.colorSelected);
+						g.fillOval(x, y, 5, 5);					
 					}
 					//show the changes
 					this.repaint();
@@ -172,8 +175,9 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Repainting method
 	 */
 	public void paintComponent(Graphics g){
-		g.setColor(this.colorSelected);
+		
 		g.drawImage(offscreen, 0, 0, null);
+		
 		
 	}
 	public void changeColor(Color c){
