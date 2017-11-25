@@ -59,7 +59,13 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	BufferedImage offscreen;
 	int x1, y1, y2, x2;
 	public static boolean isClear = false;
+	public static boolean redChanged = false;
+	public static boolean blueChanged = false;
+	public static boolean blackChanged = false;
 	private boolean receivedClear = false;
+	private boolean receivedRed = false;
+	private boolean receivedBlack = false;
+	private boolean receivedBlue = false;
 	
 	private Color colorSelected;
 	
@@ -156,7 +162,20 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				System.out.println("HERE");
 				receivedClear = true;
 				clearPane();
-			}else if (connected){
+			}else if (connected && serverData.startsWith("RED")) {
+				System.out.println("HERE");
+				receivedRed = true;
+				changeColorRed(Color.RED);
+			}else if (connected && serverData.startsWith("BLACK")) {
+				System.out.println("HERE");
+				receivedBlack = true;
+				changeColorBlack(Color.BLACK);
+			}else if (connected && serverData.startsWith("BLUE")) {
+				System.out.println("HERE");
+				receivedBlue = true;
+				changeColorBlue(Color.BLUE);
+			}
+			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){
 					String[] playersInfo = serverData.split(":");
@@ -192,9 +211,30 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public void paintComponent(Graphics g){
 		g.drawImage(offscreen, 0, 0, null);
 	}
-	public void changeColor(Color c){
+	public void changeColorRed(Color c){
 		this.colorSelected = c;
+		if (!receivedRed) {
+			send("RED " + name);
+		}
+		this.receivedRed = false;
 	}
+	public void changeColorBlue(Color c){
+		this.colorSelected = c;
+		if (!receivedBlue){
+			send("BLUE " + name);
+		}
+		this.receivedBlue = false;
+	}
+	public void changeColorBlack(Color c){
+		this.colorSelected = c;
+		if (!receivedBlack) {
+			send("BLACK " + name);
+		}
+		this.receivedBlack = false;
+	}
+		
+		
+		
 	public void clearPane(){
 		offscreen = (BufferedImage)this.createImage(640, 640);
 		repaint();
