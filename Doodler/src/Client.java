@@ -30,12 +30,12 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JButton colorButton3 = null;
 	private JButton clearButton = null;
 	private JPanel scoreBoard = null;
-	private JPanel answerPanel = null;
 	private JLabel player1 = null;
 	private JLabel player2 = null;
 	private JLabel player3 = null;
-	private JLabel answer = null;
+	
 	private GameClient gc = null;
+	private WordDisplay answerPanel = null;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -60,7 +60,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		player1 = new JLabel("Player 1: 100");
 		player2 = new JLabel("Player 2: 100");
 		player3 = new JLabel("Player 3: 100");
-		answer = new JLabel("Answer");
 		scoreBoard.add(player1);
 		scoreBoard.add(player2);
 		scoreBoard.add(player3);
@@ -78,9 +77,8 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    buttonArea = new JPanel(new FlowLayout());
 	    buttonArea.setBackground(Color.BLACK);
 	    
-	    answerPanel = new JPanel();
+	    answerPanel = new WordDisplay(gc);
 	    answerPanel.setBackground(Color.GREEN);
-	    answerPanel.add(answer);
 	    canvasArea.add(answerPanel, BorderLayout.NORTH);
 	    
 	    colorButton1 = new JButton("red");
@@ -129,15 +127,22 @@ public class Client extends JFrame implements Runnable, ActionListener {
 					Thread.sleep(1000);
 				}
 				
+				answerPanel.getThread().start();
 				start(); //start another receiver
 			}catch(Exception e) {}
 		}
 	}
 	
 	public void handle(String msg) { //prints the message for itself (from ClientThread)
+		String[] sub = msg.split(": ");
 		if (msg.equals("bye")) {
 			System.out.println("Bye");
 			stop();
+		}
+
+		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn) {
+			chatArea.append(sub[0]+": CORRECT ANSWER\n");
+			System.out.print("CORRECT");
 		}
 		else {
 			//System.out.println(this.chatArea.getText());
@@ -155,8 +160,11 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			thread = new Thread(this);
 			thread.start();
 			gc.getThread().start();
+			
 		}
+		
 	}
+	
 	public void send(String message){
 		in = message;
 	}

@@ -66,7 +66,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	
 	private Color colorSelected;
 	public boolean isTurn;
-	private String givenWord = "pet";
+	private String givenWord = null;
 	/**
 	 * Basic constructor
 	 * @param server
