@@ -51,17 +51,15 @@ public class GameClient extends JPanel implements Runnable, Constants {
      * Placeholder for data received from server
      */
 	String serverData;
-	
+	String givenWord;
 	/**	
 	 * Offscreen image for double buffering, for some
 	 * real smooth animation :)
 	 */
 	BufferedImage offscreen;
+	NetPlayer netplayer;
+	
 	int x1, y1, y2, x2;
-	public static boolean isClear = false;
-	public static boolean redChanged = false;
-	public static boolean blueChanged = false;
-	public static boolean blackChanged = false;
 	private boolean receivedClear = false;
 	private boolean clearItself = false;
 	private boolean receivedRed = false;
@@ -69,6 +67,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private boolean receivedBlue = false;
 	
 	private Color colorSelected;
+	
+	public boolean isTurn;
 	
 	/**
 	 * Basic constructor
@@ -79,6 +79,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public GameClient(String server,final String name) throws Exception{
 		this.server=server;
 		this.name=name;
+		
+		getNetPlayer();
 		
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
@@ -106,6 +108,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 
 		//tiime to play
 		//t.start();		
+	}
+	
+	public void getNetPlayer() {
+		//netPlayer =(NetPlayer)game.getPlayers().get(name);
 	}
 	
 	public Thread getThread() {
@@ -168,6 +174,15 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				receivedBlue = true;
 				changeColorBlue(Color.BLUE);
 			}
+			else if (connected && serverData.startsWith("YOURTURN")) {
+				isTurn = true;
+				String[] data = serverData.split(" ");
+				givenWord = data[1];
+				System.out.println("received " + givenWord);
+			}
+			else if (connected && serverData.startsWith("NOTYOURTURN")) {
+				isTurn = false;
+			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){
@@ -222,11 +237,13 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	}
 		
 	public void clearPane(){
-		offscreen = (BufferedImage)this.createImage(640, 640);
-		repaint();
-		if (!receivedClear || clearItself) send("CLEAR " + name);
-		clearItself = false;
-		receivedClear = false;
+		if (isTurn || receivedClear) { //can only clear if its his turn or the current players clear itself
+			offscreen = (BufferedImage)this.createImage(640, 640);
+			repaint();
+			if (!receivedClear || clearItself) send("CLEAR " + name);
+			clearItself = false;
+			receivedClear = false;
+		}
 	}
 	
 	public void setClearItself(boolean clearItself) {

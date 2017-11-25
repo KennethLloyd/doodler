@@ -213,15 +213,12 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		// TODO Auto-generated method stub
 		
 		if(arg0.getSource().equals(colorButton1)){
-			System.out.println("RED");
 			gc.changeColorRed(Color.RED);
 		}
 		else if(arg0.getSource().equals(colorButton2)){
-			System.out.println("BLUE");
 			gc.changeColorBlue(Color.BLUE);
 		}
 		else if(arg0.getSource().equals(colorButton3)){
-			System.out.println("BLACK");
 			gc.changeColorBlack(Color.BLACK);
 		}
 		else if(arg0.getSource().equals(clearButton)){

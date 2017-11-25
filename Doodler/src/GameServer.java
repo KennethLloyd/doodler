@@ -1,9 +1,7 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.Timer;
 
@@ -48,6 +46,9 @@ public class GameServer implements Runnable, Constants {
 	Thread t = new Thread(this);
 	
 	Timer timer = null;
+	
+	String currentWord = "lol";
+	
 	/**
 	 * Simple constructor
 	 */
@@ -65,6 +66,11 @@ public class GameServer implements Runnable, Constants {
 		
 		System.out.println("Game created...");
 		
+		//read file here
+		//choose initial word
+		//then notify players then give them the word
+		notifyPlayers();
+		
 		timer = new Timer(10000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (turn != numPlayers) {
@@ -73,11 +79,26 @@ public class GameServer implements Runnable, Constants {
 				else {
 					turn = 1;
 				}
+				notifyPlayers();
 			}
 			
 		});
 		//Start the game thread
 		t.start();
+	}
+	
+	public void notifyPlayers() {
+		//broadcast the current word and notify the players if its already their turn
+		  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+				String name=(String)ite.next();
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+				if (turn == player.getStartPos()) {
+					send(player, "YOURTURN " + currentWord);
+				}
+				else {
+					send(player, "NOTYOURTURN " + currentWord);
+				}
+		  }
 	}
 	
 	/**
@@ -195,8 +216,6 @@ public class GameServer implements Runnable, Constants {
 					  timer.start();
 					  break;
 				  case IN_PROGRESS:
-					  //System.out.println("Game State: IN_PROGRESS");
-					  
 					  //Player data was received!
 					  if (playerData.startsWith("PLAYER")){
 						  //Tokenize:
@@ -214,7 +233,7 @@ public class GameServer implements Runnable, Constants {
 							  game.update(pname, player);
 							  //Send to all the updated game state
 							  broadcast(game.toString());  
-						  }	
+						  }
 					  }
 					  
 					  else if (playerData.startsWith("CLEAR")) {

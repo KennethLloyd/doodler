@@ -15,13 +15,14 @@ public class NetPlayer {
 	 * The name of the player
 	 */
 	private String name;
-	
 	/**
 	 * The position of player
 	 */
 	private int x,y;
 	
 	private int startPos;
+	
+	private boolean isTurn;
 
 	/**
 	 * Constructor
@@ -97,6 +98,14 @@ public class NetPlayer {
 	
 	public int getStartPos() {
 		return this.startPos;
+	}
+	
+	public void setTurn(boolean isTurn) {
+		this.isTurn = isTurn;
+	}
+	
+	public boolean getTurn() {
+		return this.isTurn;
 	}
 
 	/**
