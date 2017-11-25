@@ -101,6 +101,33 @@ public class GameServer implements Runnable, Constants {
 			}
 		}
 	}
+	public void broadcastChangeRed(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "RED ");
+			}
+		}
+	}
+	public void broadcastChangeBlue(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "BLUE ");
+			}
+		}
+	}
+	public void broadcastChangeBlack(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "BLACK ");
+			}
+		}
+	}
 
 
 	/**
@@ -198,7 +225,23 @@ public class GameServer implements Runnable, Constants {
 							  broadcastClear(pname);  
 						  }
 					  }
+					  else if (playerData.startsWith("RED")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeRed(pname);
+					  }
+					  else if (playerData.startsWith("BLUE")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeBlue(pname);
+					  }
+					  else if (playerData.startsWith("BLACK")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeBlack(pname);
+					  }
 					  break;
+					
 			}				  
 		}
 	}	
