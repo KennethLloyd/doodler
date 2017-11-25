@@ -19,7 +19,7 @@ public class NetPlayer {
 	 * The position of player
 	 */
 	private int x,y;
-	
+	private String givenWord;
 	private int startPos;
 	
 	private boolean isTurn;

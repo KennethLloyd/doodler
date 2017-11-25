@@ -44,10 +44,11 @@ public class GameServer implements Runnable, Constants {
 	 * The main game thread
 	 */
 	Thread t = new Thread(this);
-	
+	String currentWord;
 	Timer timer = null;
-	
-	String currentWord = "lol";
+	int index;
+	private ArrayList<String> wordList = new ArrayList();
+	private ArrayList<String> usedWords = new ArrayList();
 	
 	/**
 	 * Simple constructor
@@ -66,10 +67,17 @@ public class GameServer implements Runnable, Constants {
 		
 		System.out.println("Game created...");
 		
-		//read file here
-		//choose initial word
+		/*puts words into arrayList*/
+		readFile();
+		/*randomize word*/
+		final Random rand = new Random();
+		index = rand.nextInt(4);
+		currentWord = wordList.get(index);
+		usedWords.add(currentWord);
 		//then notify players then give them the word
-		notifyPlayers();
+		
+		//Start the game thread
+		t.start();
 		
 		timer = new Timer(10000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -79,12 +87,19 @@ public class GameServer implements Runnable, Constants {
 				else {
 					turn = 1;
 				}
+				do {
+					index = rand.nextInt(4);
+					currentWord = wordList.get(index);
+					if (wordList.size() == usedWords.size()) {
+						break;
+					}
+				}while(usedWords.contains(currentWord));
+					
+				usedWords.add(currentWord);
 				notifyPlayers();
 			}
 			
 		});
-		//Start the game thread
-		t.start();
 	}
 	
 	public void notifyPlayers() {
@@ -167,6 +182,35 @@ public class GameServer implements Runnable, Constants {
 		}
 	}
 	
+	/*read files*/
+	public void readFile() {
+		/*FileReader fr = null;
+		BufferedReader br = null;
+		int i=0;
+		
+		try {
+			fr = new FileReader("words.txt");
+			br = new BufferedReader(fr);
+			
+			String word;
+
+			while ((word = br.readLine()) != null) {
+				wordList.add(word);
+				System.out.println(word);
+				i++;
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		}*/
+		wordList.add("pet");
+		wordList.add("water");
+		wordList.add("love");
+		wordList.add("kiss");
+	}
+	
 	/**
 	 * The juicy part
 	 */
@@ -214,6 +258,7 @@ public class GameServer implements Runnable, Constants {
 					  broadcast("START");
 					  gameStage=IN_PROGRESS;
 					  timer.start();
+					  notifyPlayers();
 					  break;
 				  case IN_PROGRESS:
 					  //Player data was received!

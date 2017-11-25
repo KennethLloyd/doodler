@@ -35,7 +35,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Server to connect to
 	 */
 	String server="localhost";
-
 	/**
 	 * Flag to indicate whether this player has connected or not
 	 */
@@ -51,7 +50,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
      * Placeholder for data received from server
      */
 	String serverData;
-	String givenWord;
 	/**	
 	 * Offscreen image for double buffering, for some
 	 * real smooth animation :)
@@ -67,9 +65,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private boolean receivedBlue = false;
 	
 	private Color colorSelected;
-	
 	public boolean isTurn;
-	
+	private String givenWord = "pet";
 	/**
 	 * Basic constructor
 	 * @param server
@@ -178,10 +175,14 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				isTurn = true;
 				String[] data = serverData.split(" ");
 				givenWord = data[1];
-				System.out.println("received " + givenWord);
+				System.out.println("My turn");
+				System.out.println(name + ": received " + givenWord);
 			}
 			else if (connected && serverData.startsWith("NOTYOURTURN")) {
 				isTurn = false;
+				String[] data = serverData.split(" ");
+				givenWord = data[1];
+				System.out.println(name + ": received " + givenWord);
 			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
@@ -189,7 +190,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 					String[] playersInfo = serverData.split(":");
 					for (int i=0;i<playersInfo.length;i++){
 						String[] playerInfo = playersInfo[i].split(" ");
-						String pname =playerInfo[1];
+						String pname = playerInfo[1];
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
@@ -244,12 +245,19 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			clearItself = false;
 			receivedClear = false;
 		}
+		else {
+			clearItself = false;
+		}
 	}
 	
 	public void setClearItself(boolean clearItself) {
 		this.clearItself = clearItself;
 	}
 	
+	public String getWord() {
+		return this.givenWord;
+	}
+
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
 			prevX=x;prevY=y;
