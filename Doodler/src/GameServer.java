@@ -1,9 +1,13 @@
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.Random;
 
 import javax.swing.Timer;
 
@@ -46,8 +50,12 @@ public class GameServer implements Runnable, Constants {
 	 * The main game thread
 	 */
 	Thread t = new Thread(this);
-	
+	String word;
 	Timer timer = null;
+	int index;
+	private ArrayList<String> wordList = new ArrayList();
+	private ArrayList<String> usedWords = new ArrayList();
+	
 	/**
 	 * Simple constructor
 	 */
@@ -65,6 +73,15 @@ public class GameServer implements Runnable, Constants {
 		
 		System.out.println("Game created...");
 		
+		/*puts words into arrayList*/
+		readFile();
+		/*randomize word*/
+		Random rand = new Random();
+		index = rand.nextInt(3);
+		word = wordList.get(index);
+		usedWords.add(word);
+		System.out.println(word);
+		
 		timer = new Timer(10000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				if (turn != numPlayers) {
@@ -73,6 +90,13 @@ public class GameServer implements Runnable, Constants {
 				else {
 					turn = 1;
 				}
+				do {
+					index = rand.nextInt(3);
+					word = wordList.get(index);
+				}while(usedWords.contains(word));
+					
+				usedWords.add(word);
+				System.out.println(word);
 			}
 			
 		});
@@ -144,6 +168,35 @@ public class GameServer implements Runnable, Constants {
 		}catch(IOException ioe){
 			ioe.printStackTrace();
 		}
+	}
+	
+	/*read files*/
+	public void readFile() {
+		/*FileReader fr = null;
+		BufferedReader br = null;
+		int i=0;
+		
+		try {
+			fr = new FileReader("words.txt");
+			br = new BufferedReader(fr);
+			
+			String word;
+
+			while ((word = br.readLine()) != null) {
+				wordList.add(word);
+				System.out.println(word);
+				i++;
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
+		}*/
+		wordList.add("pet");
+		wordList.add("water");
+		wordList.add("love");
+		wordList.add("kiss");
 	}
 	
 	/**

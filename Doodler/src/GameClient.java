@@ -35,7 +35,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Server to connect to
 	 */
 	String server="localhost";
-
 	/**
 	 * Flag to indicate whether this player has connected or not
 	 */
@@ -69,7 +68,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private boolean receivedBlue = false;
 	
 	private Color colorSelected;
-	
+	private String givenWord = "pet";
 	/**
 	 * Basic constructor
 	 * @param server
@@ -233,6 +232,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		this.clearItself = clearItself;
 	}
 	
+	public String getWord() {
+		return this.givenWord;
+	}
+
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
 			prevX=x;prevY=y;
