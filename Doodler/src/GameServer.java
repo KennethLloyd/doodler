@@ -193,7 +193,10 @@ public class GameServer implements Runnable, Constants {
 					  else if (playerData.startsWith("CLEAR")) {
 						  String[] playerInfo = playerData.split(" ");					  
 						  String pname = playerInfo[1];
-						  broadcastClear(pname);
+						  NetPlayer player=(NetPlayer)game.getPlayers().get(pname);
+						  if (turn == player.getStartPos()) {
+							  broadcastClear(pname);  
+						  }
 					  }
 					  break;
 			}				  

@@ -60,6 +60,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	int x1, y1, y2, x2;
 	public static boolean isClear = false;
 	private boolean receivedClear = false;
+	private boolean clearItself = false;
 	
 	private Color colorSelected;
 	
@@ -140,10 +141,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			
 			serverData=new String(buf);
 			serverData=serverData.trim();
-			
-			//if (!serverData.equals("")){
-			//	System.out.println("Server Data:" +serverData);
-			//}
 
 			//Study the following kids. 
 			if (!connected && serverData.startsWith("CONNECTED")){
@@ -153,7 +150,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				System.out.println("Connecting..");				
 				send("CONNECT "+name);
 			}else if (connected && serverData.startsWith("CLEAR")) {
-				System.out.println("HERE");
 				receivedClear = true;
 				clearPane();
 			}else if (connected){
@@ -168,11 +164,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 						//draw on the offscreen image
 						//offscreen.getGraphics().setColor(this.colorSelected);
 						
-						if(this.isClear){
-							offscreen = (BufferedImage)this.createImage(640, 640);
-							this.isClear = false;
-							repaint();
-						}
 						Graphics gd = offscreen.getGraphics();
 						gd.setColor(this.colorSelected);
 						gd.fillOval(x, y, 5, 5);		
@@ -198,13 +189,14 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public void clearPane(){
 		offscreen = (BufferedImage)this.createImage(640, 640);
 		repaint();
-		if (!receivedClear) send("CLEAR " + name);
-		this.isClear = true;
+		if (!receivedClear || clearItself) send("CLEAR " + name);
+		clearItself = false;
+		receivedClear = false;
 	}
 	
-	/*public void setReceivedClear(boolean receivedClear) {
-		this.receivedClear = receivedClear;
-	}*/
+	public void setClearItself(boolean clearItself) {
+		this.clearItself = clearItself;
+	}
 	
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
