@@ -225,7 +225,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			gc.changeColor(Color.BLACK);
 		}
 		else if(arg0.getSource().equals(clearButton)){
-			
 			gc.clearPane();
 		}
 	}

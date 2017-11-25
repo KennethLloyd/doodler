@@ -91,6 +91,16 @@ public class GameServer implements Runnable, Constants {
 			send(player,msg);	
 		}
 	}
+	
+	public void broadcastClear(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "CLEAR ");
+			}
+		}
+	}
 
 
 	/**
@@ -178,6 +188,12 @@ public class GameServer implements Runnable, Constants {
 							  //Send to all the updated game state
 							  broadcast(game.toString());  
 						  }	
+					  }
+					  
+					  else if (playerData.startsWith("CLEAR")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastClear(pname);
 					  }
 					  break;
 			}				  

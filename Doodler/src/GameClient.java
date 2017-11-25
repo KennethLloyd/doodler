@@ -59,6 +59,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	BufferedImage offscreen;
 	int x1, y1, y2, x2;
 	public static boolean isClear = false;
+	private boolean receivedClear = false;
+	
 	private Color colorSelected;
 	
 	/**
@@ -150,6 +152,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}else if (!connected){
 				System.out.println("Connecting..");				
 				send("CONNECT "+name);
+			}else if (connected && serverData.startsWith("CLEAR")) {
+				System.out.println("HERE");
+				receivedClear = true;
+				clearPane();
 			}else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){
@@ -190,10 +196,16 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		this.colorSelected = c;
 	}
 	public void clearPane(){
-		this.isClear = true;
 		offscreen = (BufferedImage)this.createImage(640, 640);
 		repaint();
+		if (!receivedClear) send("CLEAR " + name);
+		this.isClear = true;
 	}
+	
+	/*public void setReceivedClear(boolean receivedClear) {
+		this.receivedClear = receivedClear;
+	}*/
+	
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
 			prevX=x;prevY=y;

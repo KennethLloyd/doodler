@@ -27,7 +27,7 @@ public class Start implements MouseListener {
 		final JTextField ip = new JTextField(10);
 		final JTextField uname = new JTextField(10);
 		
-		JFrame frame = new JFrame("Start");
+		final JFrame frame = new JFrame("Start");
 		frame.setPreferredSize(new Dimension(262,228));
 		frame.setResizable(false);
 		frame.pack();
