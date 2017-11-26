@@ -257,6 +257,12 @@ public class GameServer implements Runnable, Constants {
 					  System.out.println("Game State: START");
 					  broadcast("START");
 					  gameStage=IN_PROGRESS;
+					  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+							String name=(String)ite.next();
+							NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+							player.setPlace((2*numPlayers)-1);
+							player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
+					  }
 					  timer.start();
 					  notifyPlayers();
 					  break;

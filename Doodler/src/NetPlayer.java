@@ -21,7 +21,8 @@ public class NetPlayer {
 	private int x,y;
 	private String givenWord;
 	private int startPos;
-	
+	private int place;
+	private int score;
 	private boolean isTurn;
 
 	/**
@@ -53,7 +54,21 @@ public class NetPlayer {
 	public int getPort(){
 		return port;
 	}
-
+	
+	public int getPlace() {
+		return this.place;
+		
+	}
+	public void setPlace(int p){
+		this.place = p;
+	}
+	public void setScore(int s){
+		this.score = s;
+	}
+	public int getScore() {
+		return this.score;
+		
+	}
 	/**
 	 * Returns the name of the player
 	 * @return

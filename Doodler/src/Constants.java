@@ -10,6 +10,9 @@ public interface Constants {
 	public final int GAME_END=2;
 	public final int WAITING_FOR_PLAYERS=3;
 	
+	public final int MAX_SCORE=100;
+	public final int BASE_SCORE=50;
+	
 	/**
 	 * Game port
 	 */
