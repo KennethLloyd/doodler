@@ -39,6 +39,7 @@ public class GameServer implements Runnable, Constants {
 	 * Number of players
 	 */
 	int numPlayers;
+	int numCorrectPlayers;
 	
 	/**
 	 * The main game thread
@@ -310,9 +311,30 @@ public class GameServer implements Runnable, Constants {
 						  String pname = playerInfo[1];
 						  broadcastChangeBlack(pname);
 					  }
+					  else if (playerData.startsWith("GUESSED ")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  numCorrectPlayers++;
+						  checkIfCorrectAll();
+					  }
 					  break;
 					
 			}				  
 		}
-	}	
+	}
+	
+	public void clearAllCanvas() { //before proceeding to next round
+	  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+			broadcastClear(name); 
+	  }
+	}
+	
+	public void checkIfCorrectAll() {
+		if (numCorrectPlayers == numPlayers-1) { //all players guessed right
+			numCorrectPlayers = 0;
+			clearAllCanvas();
+		}
+	}
 }

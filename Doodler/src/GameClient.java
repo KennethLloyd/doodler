@@ -66,6 +66,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	
 	private Color colorSelected;
 	public boolean isTurn;
+	private boolean hasGuessed = false;
 	private String givenWord = null;
 	/**
 	 * Basic constructor
@@ -76,8 +77,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public GameClient(String server,final String name) throws Exception{
 		this.server=server;
 		this.name=name;
-		
-		getNetPlayer();
 		
 		//set some timeout for the socket
 		socket.setSoTimeout(100);
@@ -105,10 +104,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 
 		//tiime to play
 		//t.start();		
-	}
-	
-	public void getNetPlayer() {
-		//netPlayer =(NetPlayer)game.getPlayers().get(name);
 	}
 	
 	public Thread getThread() {
@@ -256,6 +251,12 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	
 	public String getWord() {
 		return this.givenWord;
+	}
+	
+	public void setHasGuessed(boolean hasGuessed) {
+		this.hasGuessed = hasGuessed;
+		send("GUESSED " + name);
+		this.hasGuessed = false;
 	}
 
 	class KeyHandler extends KeyAdapter{

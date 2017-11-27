@@ -14,9 +14,7 @@ public class WordDisplay extends JPanel implements Runnable{
 		t.start();
 	}
 
-	@Override
 	public void run() {
-
 		while(true) {
 			if(gc.isTurn) {
 				answer.setText(gc.getWord());

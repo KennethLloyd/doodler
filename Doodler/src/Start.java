@@ -1,12 +1,3 @@
-/*import org.eclipse.swt.widgets.Display;
-import org.eclipse.swt.widgets.Shell;
-import org.eclipse.swt.widgets.Button;
-import org.eclipse.swt.SWT;
-import org.eclipse.swt.widgets.Text;
-import org.eclipse.swt.widgets.Label;
-import org.eclipse.swt.events.MouseAdapter;
-import org.eclipse.swt.events.MouseEvent;*/
-
 import javax.swing.*;
 
 import java.awt.*;
@@ -18,11 +9,6 @@ public class Start implements MouseListener {
 	 * @param args
 	 */
 	public static void main(String[] args) {
-		/*Display display = Display.getDefault();
-		Shell shell = new Shell();
-		
-		shell.setSize(262, 228);
-		shell.setText("SWT Application");*/
 		JTextField port = new JTextField(10);
 		final JTextField ip = new JTextField(10);
 		final JTextField uname = new JTextField(10);
@@ -31,6 +17,7 @@ public class Start implements MouseListener {
 		frame.setPreferredSize(new Dimension(262,228));
 		frame.setResizable(false);
 		frame.pack();
+		frame.setLocationRelativeTo(null);
 		frame.setLayout(new FlowLayout());
 		Container container = frame.getContentPane();
 		JPanel panel = new JPanel();
