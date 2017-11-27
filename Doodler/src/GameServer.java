@@ -98,6 +98,7 @@ public class GameServer implements Runnable, Constants {
 					
 				usedWords.add(currentWord);
 				notifyPlayers();
+				clearAllCanvas();
 			}
 			
 		});
@@ -233,9 +234,6 @@ public class GameServer implements Runnable, Constants {
 			
 			//remove excess bytes
 			playerData = playerData.trim();
-			//if (!playerData.equals("")){
-			//	System.out.println("Player Data:"+playerData);
-			//}
 		
 			// process
 			switch(gameStage){
@@ -335,6 +333,9 @@ public class GameServer implements Runnable, Constants {
 		if (numCorrectPlayers == numPlayers-1) { //all players guessed right
 			numCorrectPlayers = 0;
 			clearAllCanvas();
+			timer.stop();
+			timer.setInitialDelay(0);
+			timer.start();
 		}
 	}
 }
