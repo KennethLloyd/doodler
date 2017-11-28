@@ -258,6 +258,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		send("GUESSED " + name);
 		this.hasGuessed = false;
 	}
+	@SuppressWarnings("deprecation")
+	public void stopThread(){
+		this.t.stop();
+	}
 
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){

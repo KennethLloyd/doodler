@@ -6,6 +6,7 @@ public class GameState {
 	/**
 	 * This is a map(key-value pair) of <player name,NetPlayer>
 	 */
+	private int round = 0;
 	private Map players=new HashMap();
 	
 	/**
@@ -43,5 +44,13 @@ public class GameState {
 	 */
 	public Map getPlayers(){
 		return players;
+	}
+
+	public int getRound() {
+		return round;
+	}
+
+	public void setRound(int round) {
+		this.round = round;
 	}
 }

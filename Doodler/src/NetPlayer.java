@@ -36,6 +36,7 @@ public class NetPlayer {
 		this.port = port;
 		this.name = name;
 		this.startPos = startPos;
+		this.score = 0;
 		System.out.println("Player " + this.startPos);
 	}
 
@@ -63,7 +64,7 @@ public class NetPlayer {
 		this.place = p;
 	}
 	public void setScore(int s){
-		this.score = s;
+		this.score += s;
 	}
 	public int getScore() {
 		return this.score;

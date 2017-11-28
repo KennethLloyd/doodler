@@ -42,7 +42,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	 * @wbp.parser.entryPoint
 	 */
 	public Client(String uname, String serverName, int portno) {
-		super("Doodler");
+		super(uname);
 		this.serverName = serverName;
 		this.setPreferredSize(new Dimension(1000,600));
 		this.setResizable(false);
@@ -139,7 +139,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			System.out.println("Bye");
 			stop();
 		}
-
+		
 		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn) {
 			chatArea.append(sub[0]+": CORRECT ANSWER\n");
 			gc.setHasGuessed(true);
