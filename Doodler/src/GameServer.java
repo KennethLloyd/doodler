@@ -39,7 +39,7 @@ public class GameServer implements Runnable, Constants {
 	 * Number of players
 	 */
 	int numPlayers;
-	static int numCorrectPlayers=1;
+	static int numCorrectPlayers;
 	
 	/**
 	 * The main game thread
@@ -80,9 +80,9 @@ public class GameServer implements Runnable, Constants {
 		//Start the game thread
 		t.start();
 		
-		timer = new Timer(10000, new ActionListener() {
+		timer = new Timer(100000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				numCorrectPlayers=1;
+				numCorrectPlayers=0;
 				if (turn != numPlayers) {
 					turn++;
 				}
@@ -344,9 +344,9 @@ public class GameServer implements Runnable, Constants {
 									NetPlayer player=(NetPlayer)game.getPlayers().get(pname);
 									System.out.println(pname);
 									System.out.println(player.getScore());
-									System.out.println(numCorrectPlayers);
+									System.out.println(numCorrectPlayers+1);
 									System.out.println(player.getPlace());
-									player.setPlace(numCorrectPlayers);
+									player.setPlace(numCorrectPlayers+1);
 									System.out.println("score MAX:"+MAX_SCORE);
 									System.out.println("score place:"+player.getPlace());
 									System.out.println("score BASE:"+BASE_SCORE);
@@ -388,7 +388,7 @@ public class GameServer implements Runnable, Constants {
 		System.out.println("NUMBR: "+numPlayers);
 		System.out.println("NUMBR2: "+numCorrectPlayers);
 		if (numCorrectPlayers == numPlayers-1) { //all players guessed right
-			numCorrectPlayers = 1;
+			numCorrectPlayers = 0;
 			clearAllCanvas();
 			timer.stop();
 			timer.setInitialDelay(0);

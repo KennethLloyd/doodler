@@ -19,7 +19,15 @@ public class WordDisplay extends JPanel implements Runnable{
 			if(gc.isTurn) {
 				answer.setText(gc.getWord());
 			}else {
-				answer.setText("_____");
+				String ansTemp = "";
+				if(gc!=null){
+					if(gc.getWord()!=null){
+						for(int i=0;i < gc.getWord().length();i++){
+							ansTemp+="__ ";
+						}
+					}
+				}
+				answer.setText(ansTemp);
 			}
 		}
 		
