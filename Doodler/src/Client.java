@@ -25,9 +25,15 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JPanel chatbox = null;
 	private JPanel canvasArea = null;
 	private JPanel buttonArea = null;
+	private JPanel colorButtons = null;
 	private JButton colorButton1 = null;
 	private JButton colorButton2 = null;
 	private JButton colorButton3 = null;
+	private JButton colorButton4 = null;
+	private JButton colorButton5 = null;
+	private JButton colorButton6 = null;
+	private JButton colorButton7 = null;
+	private JButton colorButton8 = null;
 	private JButton clearButton = null;
 	private JPanel scoreBoard = null;
 	private JLabel player1 = null;
@@ -74,16 +80,29 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    
 	    canvasArea = new JPanel(new BorderLayout());
 	    canvasArea.add(gc, BorderLayout.CENTER);
-	    buttonArea = new JPanel(new FlowLayout());
+	    buttonArea = new JPanel(new GridLayout(2,3));
 	    buttonArea.setBackground(Color.BLACK);
 	    
 	    answerPanel = new WordDisplay(gc);
 	    answerPanel.setBackground(Color.GREEN);
 	    canvasArea.add(answerPanel, BorderLayout.NORTH);
 	    
-	    colorButton1 = new JButton("red");
-	    colorButton2 = new JButton("blue");
-	    colorButton3 = new JButton("black");
+	    colorButton1 = new JButton();
+	    colorButton1.setBackground(Color.RED);
+	    colorButton2 = new JButton();
+	    colorButton2.setBackground(Color.BLUE);
+	    colorButton3 = new JButton();
+	    colorButton3.setBackground(Color.BLACK);
+	    colorButton4 = new JButton();
+	    colorButton4.setBackground(Color.YELLOW);
+	    colorButton5 = new JButton();
+	    colorButton5.setBackground(Color.GREEN);
+	    colorButton6 = new JButton();
+	    colorButton6.setBackground(Color.WHITE);
+	    colorButton7 = new JButton();
+	    colorButton7.setBackground(Color.ORANGE);
+	    colorButton7 = new JButton();
+	    colorButton7.setBackground(Color.PINK);
 	    clearButton = new JButton("clear");
 	    
 	    colorButton1.addActionListener(this);
@@ -94,6 +113,10 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    buttonArea.add(colorButton1);
 	    buttonArea.add(colorButton2);
 	    buttonArea.add(colorButton3);
+	    buttonArea.add(colorButton4);
+	    buttonArea.add(colorButton5);
+	    buttonArea.add(colorButton6);
+	    buttonArea.add(colorButton7);
 	    buttonArea.add(clearButton);
 	    
 	    canvasArea.add(buttonArea, BorderLayout.SOUTH);
