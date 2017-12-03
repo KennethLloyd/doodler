@@ -63,6 +63,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private boolean receivedRed = false;
 	private boolean receivedBlack = false;
 	private boolean receivedBlue = false;
+	private boolean receivedYellow = false;
+	private boolean receivedGreen = false;
+	private boolean receivedWhite = false;
+	private boolean receivedPink = false;
 	
 	private Color colorSelected;
 	public boolean isTurn;
@@ -165,6 +169,18 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}else if (connected && serverData.startsWith("BLUE")) {
 				receivedBlue = true;
 				changeColorBlue(Color.BLUE);
+			}else if (connected && serverData.startsWith("YELLOW")) {
+				receivedYellow = true;
+				changeColorYellow(Color.YELLOW);
+			}else if (connected && serverData.startsWith("GREEN")) {
+				receivedGreen = true;
+				changeColorGreen(Color.GREEN);
+			}else if (connected && serverData.startsWith("WHITE")) {
+				receivedWhite = true;
+				changeColorWhite(Color.WHITE);
+			}else if (connected && serverData.startsWith("PINK")) {
+				receivedPink = true;
+				changeColorPink(Color.PINK);
 			}
 			else if (connected && serverData.startsWith("YOURTURN")) {
 				isTurn = true;
@@ -230,6 +246,34 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			send("BLACK " + name);
 		}
 		this.receivedBlack = false;
+	}
+	public void changeColorYellow(Color c){
+		this.colorSelected = c;
+		if (!receivedYellow) {
+			send("YELLOW " + name);
+		}
+		this.receivedYellow = false;
+	}
+	public void changeColorGreen(Color c){
+		this.colorSelected = c;
+		if (!receivedGreen) {
+			send("GREEN " + name);
+		}
+		this.receivedGreen = false;
+	}
+	public void changeColorWhite(Color c){
+		this.colorSelected = c;
+		if (!receivedWhite) {
+			send("WHITE " + name);
+		}
+		this.receivedWhite = false;
+	}
+	public void changeColorPink(Color c){
+		this.colorSelected = c;
+		if (!receivedPink) {
+			send("PINK " + name);
+		}
+		this.receivedPink = false;
 	}
 		
 	public void clearPane(){

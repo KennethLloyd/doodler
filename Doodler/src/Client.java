@@ -108,6 +108,10 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    colorButton1.addActionListener(this);
 	    colorButton2.addActionListener(this);
 	    colorButton3.addActionListener(this);
+	    colorButton4.addActionListener(this);
+	    colorButton5.addActionListener(this);
+	    colorButton6.addActionListener(this);
+	    colorButton7.addActionListener(this);
 	    clearButton.addActionListener(this);
 	    
 	    buttonArea.add(colorButton1);
@@ -252,6 +256,14 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		}
 		else if(arg0.getSource().equals(colorButton3)){
 			gc.changeColorBlack(Color.BLACK);
+		}else if(arg0.getSource().equals(colorButton4)){
+			gc.changeColorYellow(Color.YELLOW);
+		}else if(arg0.getSource().equals(colorButton5)){
+			gc.changeColorGreen(Color.GREEN);
+		}else if(arg0.getSource().equals(colorButton6)){
+			gc.changeColorWhite(Color.WHITE);
+		}else if(arg0.getSource().equals(colorButton7)){
+			gc.changeColorPink(Color.PINK);
 		}
 		else if(arg0.getSource().equals(clearButton)){
 			gc.setClearItself(true);

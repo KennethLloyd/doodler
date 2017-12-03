@@ -195,6 +195,42 @@ public class GameServer implements Runnable, Constants {
 			}
 		}
 	}
+	public void broadcastChangeYellow(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "YELLOW ");
+			}
+		}
+	}
+	public void broadcastChangeGreen(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "GREEN ");
+			}
+		}
+	}
+	public void broadcastChangeWhite(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "WHITE ");
+			}
+		}
+	}
+	public void broadcastChangePink(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "PINK ");
+			}
+		}
+	}
 
 
 	/**
@@ -334,6 +370,26 @@ public class GameServer implements Runnable, Constants {
 						  String[] playerInfo = playerData.split(" ");					  
 						  String pname = playerInfo[1];
 						  broadcastChangeBlack(pname);
+					  }
+					  else if (playerData.startsWith("YELLOW")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeYellow(pname);
+					  }
+					  else if (playerData.startsWith("GREEN")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeGreen(pname);
+					  }
+					  else if (playerData.startsWith("WHITE")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeWhite(pname);
+					  }
+					  else if (playerData.startsWith("PINK")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangePink(pname);
 					  }
 					  else if (playerData.startsWith("GUESSED ")) {
 						  String[] playerInfo = playerData.split(" ");					  
