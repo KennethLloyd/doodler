@@ -31,7 +31,7 @@ public class Start implements MouseListener {
 		frame.pack();
 		frame.setLocationRelativeTo(null);
 		JLabel label = new JLabel(new ImageIcon(scaledBackground));
-		JLabel label1 = new JLabel("", new ImageIcon(logoPic), JLabel.CENTER);;
+		JLabel label1 = new JLabel("", new ImageIcon(logoPic), JLabel.CENTER);
 		Container container = frame.getContentPane();
 		label.setLayout(new BoxLayout(label, BoxLayout.PAGE_AXIS));
 		frame.setContentPane(label);

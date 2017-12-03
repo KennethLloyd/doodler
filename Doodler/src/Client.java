@@ -1,14 +1,20 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.Border;
 
 import java.awt.*;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.image.BufferedImage;
 import java.io.DataOutputStream;
+import java.io.File;
 import java.io.IOException;
 import java.net.Socket;
 
 public class Client extends JFrame implements Runnable, ActionListener {
+	private static JPanel anotherBigPanel;
+	private static JPanel mainPanel;
+	private static JPanel timerPanel;
 	private static JTextField textArea;
 	private String un;
 	private JTextArea chatArea;
@@ -45,31 +51,81 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	/**
 	 * Launch the application.
 	 * @param args
+	 * @throws IOException 
 	 * @wbp.parser.entryPoint
 	 */
-	public Client(String uname, String serverName, int portno) {
+	public Client(String uname, String serverName, int portno) throws IOException {
 		super(uname);
 		this.serverName = serverName;
 		this.setPreferredSize(new Dimension(1000,600));
 		this.setResizable(false);
 		this.pack();
-		this.setLayout(new BorderLayout());
 		this.container = this.getContentPane();
 		this.un = uname;
 		System.out.println("Connecting...");
 		System.out.println("Enter to continue");
 		
+		JPanel space1 = new JPanel();
+		space1.setOpaque(false);
+		JPanel space2 = new JPanel();
+		space2.add(new JLabel(""));
+		space2.setOpaque(false);
+		JPanel space3 = new JPanel();
+		space3.setOpaque(false);
+		JPanel space4 = new JPanel();
+		space4.setOpaque(false);
+		JPanel space5 = new JPanel();
+		space5.setOpaque(false);
+		
+		BufferedImage backgroundImg = ImageIO.read(new File("./rsc/bg-image.jpg"));
+		Image scaledBackground = backgroundImg.getScaledInstance(1000,600,Image.SCALE_SMOOTH);
+		//this.setLayout(new BorderLayout());
+		JLabel label = new JLabel(new ImageIcon(scaledBackground));
+		label.setLayout(new BorderLayout());
+		this.setContentPane(label);
+		
+		timerPanel = new JPanel(new FlowLayout());
+		timerPanel.setBackground(Color.WHITE);
+		BufferedImage timerImg = ImageIO.read(new File("./rsc/timer.png"));
+		Image timerImg1 = timerImg.getScaledInstance(60,60,Image.SCALE_SMOOTH);
+		JLabel label1 = new JLabel("", new ImageIcon(timerImg1), SwingConstants.LEFT);
+		timerPanel.add(label1);
+		timerPanel.add(new JLabel(" "));
+		timerPanel.add(new JLabel("PLAYER1'S TURN"));
+		
+		mainPanel = new JPanel(new BorderLayout());
+		JPanel scorePanel = new JPanel(new GridLayout(1,0));
 		scoreBoard = new JPanel(new GridLayout(0,1));
 		
-		scoreBoard.setBackground(Color.GRAY);
+		scoreBoard.setBackground(Color.WHITE);
 		scoreBoard.setPreferredSize(new Dimension(200, 100));
-		player1 = new JLabel("Player 1: 100");
-		player2 = new JLabel("Player 2: 100");
-		player3 = new JLabel("Player 3: 100");
-		scoreBoard.add(player1);
-		scoreBoard.add(player2);
-		scoreBoard.add(player3);
-		this.container.add(scoreBoard, BorderLayout.WEST);
+		JPanel player1Panel = new JPanel();
+		JPanel player2Panel = new JPanel();
+		JPanel player3Panel = new JPanel();
+		
+		BufferedImage i1 = ImageIO.read(new File("./rsc/char1.jpg"));
+		BufferedImage i2 = ImageIO.read(new File("./rsc/char2.jpg"));
+		BufferedImage i3 = ImageIO.read(new File("./rsc/char3.jpg"));
+		JLabel player1 = new JLabel(new ImageIcon(i1));
+		JLabel player2 = new JLabel(new ImageIcon(i2));
+		JLabel player3 = new JLabel(new ImageIcon(i3));
+		player1Panel.add(player1);
+		player1Panel.add(new JLabel("PLAYER1: 100"));
+		player1Panel.setBackground(Color.GRAY);
+		player2Panel.add(player2);
+		player2Panel.add(new JLabel("PLAYER2: 100"));
+		player2Panel.setBackground(Color.WHITE);
+		player3Panel.add(player3);
+		player3Panel.add(new JLabel("PLAYER3: 100"));
+		player3Panel.setBackground(Color.GRAY);
+		
+		scoreBoard.add(player1Panel);
+		scoreBoard.add(player2Panel);
+		scoreBoard.add(player3Panel);
+		
+		scorePanel.add(scoreBoard);
+		
+		this.mainPanel.add(scorePanel, BorderLayout.WEST);
 		
 		try {
 			gc = new GameClient(serverName, un);
@@ -123,9 +179,26 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    buttonArea.add(colorButton7);
 	    buttonArea.add(clearButton);
 	    
+	    scorePanel.setOpaque(false);
+	    mainPanel.setOpaque(false);
+	    
+	    anotherBigPanel = new JPanel();
+	    anotherBigPanel.setLayout(new BoxLayout(anotherBigPanel, BoxLayout.PAGE_AXIS));
+	    anotherBigPanel.setOpaque(false);
+	    
 	    canvasArea.add(buttonArea, BorderLayout.SOUTH);
-	    this.container.add(canvasArea, BorderLayout.CENTER);
-		
+	    this.mainPanel.add(canvasArea, BorderLayout.CENTER);
+	    this.add(space1, BorderLayout.NORTH);
+	    anotherBigPanel.add(timerPanel);
+	    anotherBigPanel.add(space2);
+		anotherBigPanel.add(mainPanel);
+		this.add(anotherBigPanel, BorderLayout.CENTER);
+		this.add(space3, BorderLayout.SOUTH);
+	    this.add(space4, BorderLayout.EAST);
+	    this.add(space5, BorderLayout.WEST);
+	    
+	    
+	    
 		try {
 			socket = new Socket(serverName, portno);
 			out = new DataOutputStream(socket.getOutputStream());
@@ -225,7 +298,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		chatbox.add(chatArea, BorderLayout.CENTER);
 		chatbox.add(textArea, BorderLayout.SOUTH);
 		
-		this.container.add(chatbox, BorderLayout.EAST);
+		this.mainPanel.add(chatbox, BorderLayout.EAST);
 		
 		textArea.addKeyListener(new KeyListener() {
 			public void keyPressed(KeyEvent e){
