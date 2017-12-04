@@ -107,49 +107,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		timerPanel.add(currentPlayer);
 		
 		mainPanel = new JPanel(new BorderLayout());
-//		JPanel scorePanel = new JPanel(new GridLayout(1,0));
-//		scoreBoard = new ScoreDisplay();
-//		
-//		scoreBoard.setBackground(Color.WHITE);
-//		scoreBoard.setPreferredSize(new Dimension(200, 100));
-//		
-//		JPanel player1Panel = new JPanel();
-//		JPanel player2Panel = new JPanel();
-//		JPanel player3Panel = new JPanel();
-//		
-//		BufferedImage i1 = ImageIO.read(new File("./rsc/char1.jpg"));
-//		BufferedImage i2 = ImageIO.read(new File("./rsc/char2.jpg"));
-//		BufferedImage i3 = ImageIO.read(new File("./rsc/char3.jpg"));
-//		JLabel player1 = new JLabel(new ImageIcon(i1));
-//		JLabel player2 = new JLabel(new ImageIcon(i2));
-//		JLabel player3 = new JLabel(new ImageIcon(i3));
-//		
-//		player1Panel.add(player1);
-//		
-//		player1score = new JLabel("0");
-//		player1Panel.add(new JLabel("PLAYER1: "));
-//		
-//		player1Panel.add(player1score);
-//		player1Panel.setBackground(Color.GRAY);
-//		player2Panel.add(player2);
-//		player2Panel.add(new JLabel("PLAYER2: 100"));
-//		player2Panel.setBackground(Color.WHITE);
-//		player3Panel.add(player3);
-//		player3Panel.add(new JLabel("PLAYER3: 100"));
-//		player3Panel.setBackground(Color.GRAY);
-//		
-//		JPanel player4Panel = new JPanel();
-//		player4Panel.add(player3);
-//		player4Panel.add(new JLabel("PLAYER3: 100"));
-//		player4Panel.setBackground(Color.GREEN);
-//		
-//		scoreBoard.add(player1Panel);
-//		scoreBoard.add(player2Panel);
-//		scoreBoard.add(player3Panel);
-//		scoreBoard.add(player4Panel);
-//		
-		
-		
+
 		try {
 			gc = new GameClient(serverName, un);
 		} catch (Exception e1) {
@@ -325,12 +283,17 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			System.out.println("Bye");
 			stop();
 		}
-		
+		System.out.print("isturn: "+this.gc.isTurn);
+		System.out.print("isown: "+ ownAnswer);
 		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !this.gc.isTurn && ownAnswer == true) {
+			if(!gc.getHasGuessed()){
+				ownAnswer = false;
+				gc.sendHasGuessed();
+			}
 			chatArea.append(sub[0]+": CORRECT ANSWER\n");
-			ownAnswer = false;
-			gc.sendHasGuessed();
-			System.out.print("CORRECT");
+		}
+		else if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !this.gc.isTurn && ownAnswer == false){
+			chatArea.append(sub[0]+": CORRECT ANSWER\n");
 		}
 		else {
 			//System.out.println(this.chatArea.getText());

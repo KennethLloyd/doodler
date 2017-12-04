@@ -90,7 +90,7 @@ public class GameServer implements Runnable, Constants {
 				}
 				else {
 
-					setDoodlerScore(turn,numCorrectPlayers);
+//					setDoodlerScore(turn,numCorrectPlayers);
 					turn = 1;
 					game.setRound(game.getRound()+1);
 				}

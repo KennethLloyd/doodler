@@ -81,6 +81,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private String[] names;
 
 	public String[] scores ;
+
+	private boolean hasGuessed;
 	/**
 	 * Basic constructor
 	 * @param server
@@ -205,6 +207,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				gameStart = true;
 			}
 			else if (connected && serverData.startsWith("NEWROUND")) {
+				hasGuessed = false;
 				newRound = true;
 			}
 			else if (connected && serverData.startsWith("NUMPLAYERS")) {
@@ -355,6 +358,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		return this.names;
 	}
 	public void sendHasGuessed() {
+//		hasGuessed = true;
 		send("GUESSED " + name);
 	}
 	@SuppressWarnings("deprecation")
@@ -379,6 +383,11 @@ public class GameClient extends JPanel implements Runnable, Constants {
 
 	public void setGameStart(boolean b) {
 		this.gameStart = b;
+	}
+
+	public boolean getHasGuessed() {
+		// TODO Auto-generated method stub
+		return this.hasGuessed;
 	}
 	
 }
