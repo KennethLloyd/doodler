@@ -44,6 +44,22 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		t.start();
 		
 	}
+	public String getHighScorer() {
+		String highScorer = "";
+		int hs = 0;
+		for(int i=0; i<scores.size(); i++) {
+			for(int j = 0; j<scores.size();j++) {
+				if(Integer.parseInt(scores.get(j).getText())>Integer.parseInt(scores.get(i).getText())) {
+					hs = j;
+				}else {
+					hs = i;
+				}
+			}
+		}
+		highScorer = names.get(hs).getText();
+		//System.out.println(highScorer);
+		return highScorer;		
+	}
 	public void addToScorePanel(String uname) {
 		JPanel player1Panel = new JPanel();
 		BufferedImage i1=null;
