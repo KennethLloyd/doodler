@@ -25,6 +25,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Nice name!
 	 */
 	String name="Joseph";
+	String currentPlayer;
 	
 	/**
 	 * Player name of others
@@ -105,9 +106,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}
 			
 		});
-
-		//tiime to play
-		//t.start();		
+	
 	}
 	
 	public Thread getThread() {
@@ -186,14 +185,17 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				isTurn = true;
 				String[] data = serverData.split(" ");
 				givenWord = data[1];
-				System.out.println("My turn");
-				System.out.println(name + ": received " + givenWord);
+				currentPlayer = data[2];
 			}
 			else if (connected && serverData.startsWith("NOTYOURTURN")) {
 				isTurn = false;
 				String[] data = serverData.split(" ");
 				givenWord = data[1];
-				System.out.println(name + ": received " + givenWord);
+				currentPlayer = data[2];
+			}
+			else if (connected && serverData.startsWith("CURRENTPLAYER")) {
+				String[] data = serverData.split(" ");
+				currentPlayer = data[1];
 			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
@@ -295,6 +297,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	
 	public String getWord() {
 		return this.givenWord;
+	}
+	
+	public String getCurrentPlayer() {
+		return this.currentPlayer;
 	}
 	
 	public void setHasGuessed(boolean hasGuessed) {
