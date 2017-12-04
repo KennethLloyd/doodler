@@ -41,7 +41,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JButton colorButton7 = null;
 	private JButton colorButton8 = null;
 	private JButton clearButton = null;
-	private JPanel scoreBoard = null;
+	private ScoreDisplay scoreBoard = null;
 	private JLabel player1 = null;
 	private JLabel player2 = null;
 	private JLabel player3 = null;
@@ -158,7 +158,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		}
 	    
 		JPanel scorePanel = new JPanel(new GridLayout(1,0));
-//		scoreBoard = new ScoreDisplay();
+		scoreBoard = new ScoreDisplay(gc);
 		scorePanel.add(scoreBoard);
 		
 		this.mainPanel.add(scorePanel, BorderLayout.WEST);
@@ -233,6 +233,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	                time.setFont(new Font("Serif", Font.PLAIN, 30));
 	                ((Timer)e.getSource()).stop();
 	                count = 80;
+	                resetTimer();
 	            } else {
 	                time.setText(Integer.toString(count));
 	                time.setFont(new Font("Serif", Font.PLAIN, 30));
@@ -259,8 +260,19 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	 * @wbp.parser.entryPoint
 	 */
 	
+	public void resetTimer() {
+		timer.stop();
+		timer.start();
+	}
+	
 	public void run() {
 		while (thread != null) {
+			if (gc.endgame == true) {
+				timer.stop();
+				time.setText("GAME OVER");
+				time.setFont(new Font("Serif", Font.PLAIN, 30));
+				gc.newRound = false;
+			}
 			if (gc.getNewRound() == true) {
 				timer.stop();
 				count = 80;
@@ -275,7 +287,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 				currentPlayer.setText(currentPlayerName + "'s TURN");
 			}
 			if (gc.getGameStart() == true) {
+				scoreBoard.setNumPlayers(gc.getNames(),gc.getNumPlayers(),gc);
 				timer.start();
+				gc.setGameStart(false);
 			}
 			if (client == null) client = new ClientThread(this, socket);
 

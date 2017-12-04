@@ -337,7 +337,15 @@ public class GameServer implements Runnable, Constants {
 							broadcast("CONNECTED "+tokens[1]);
 							playerCount++;
 							if (playerCount==numPlayers){
+								String names="";
+								for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+									String name=(String)ite.next();
+									names += (name+";");
+									
+								}
+								broadcast("PLAYERNAMES " + names);
 								broadcast("NUMPLAYERS " + numPlayers);
+								
 								gameStage=GAME_START;
 							}
 						}
@@ -445,6 +453,13 @@ public class GameServer implements Runnable, Constants {
 									break;
 								}
 							}
+						  String scoresTemp = "";
+						  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+								String name=(String)ite.next();
+								NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+								scoresTemp += (Integer.toString(player.getScore())+";");
+						  }
+						  broadcast("SCORES " + scoresTemp);
 					  }
 					  break;
 				  case END_GAME:
@@ -457,6 +472,7 @@ public class GameServer implements Runnable, Constants {
 					  }
 					  gameStage=5;
 					  timer.stop();
+					  broadcast("ENDGAME ");
 					  break;
 				  case STATIC_GAME:
 					  break;

@@ -1,5 +1,7 @@
 import javax.swing.*;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -73,8 +75,14 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private Color colorSelected;
 	public boolean isTurn;
 	public boolean newRound = false;
+	public boolean endgame = false;
+	public boolean resScore = true;
 	private String givenWord = null;
 	private int numPlayers;
+
+	private String[] names;
+
+	public String[] scores;
 	/**
 	 * Basic constructor
 	 * @param server
@@ -205,6 +213,21 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				String[] data = serverData.split(" ");
 				numPlayers = Integer.parseInt(data[1]);
 			}
+			else if (connected && serverData.startsWith("PLAYERNAMES")) {
+				String[] data = serverData.split(" ");
+				String pn = data[1];
+				names = pn.split(";");
+			}
+			else if (connected && serverData.startsWith("SCORES")) {
+				String[] data = serverData.split(" ");
+				String pn = data[1];
+				scores = pn.split(";");
+				System.out.println("SCORE SETTING");
+				resScore = true;
+			}
+			else if (connected && serverData.startsWith("ENDGAME")) {
+				endgame = true;
+			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){
@@ -322,6 +345,17 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		return this.numPlayers;
 	}
 	
+	public boolean getReceivedScore() {
+		return this.resScore;
+	}
+	
+	public void setReceivedScore(boolean b) {
+		this.resScore = b;
+	}
+	
+	public String[] getNames() {
+		return this.names;
+	}
 	public void sendHasGuessed() {
 		send("GUESSED " + name);
 	}
@@ -343,6 +377,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				send("PLAYER "+name+" "+x+" "+y);
 			}	
 		}
+	}
+
+	public void setGameStart(boolean b) {
+		this.gameStart = b;
 	}
 }
    

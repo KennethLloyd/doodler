@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GameState {
@@ -7,7 +8,7 @@ public class GameState {
 	 * This is a map(key-value pair) of <player name,NetPlayer>
 	 */
 	private int round = 0;
-	private Map players=new HashMap();
+	private Map players=new LinkedHashMap();
 	
 	/**
 	 * Simple constructor
