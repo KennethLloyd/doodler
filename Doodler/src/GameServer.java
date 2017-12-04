@@ -81,7 +81,7 @@ public class GameServer implements Runnable, Constants {
 		//Start the game thread
 		t.start();
 		
-		timer = new Timer(100000, new ActionListener() {
+		timer = new Timer(80000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				numCorrectPlayers=0;
 				if (turn != numPlayers) {//set next player
@@ -337,13 +337,13 @@ public class GameServer implements Runnable, Constants {
 							broadcast("CONNECTED "+tokens[1]);
 							playerCount++;
 							if (playerCount==numPlayers){
+								broadcast("NUMPLAYERS " + numPlayers);
 								gameStage=GAME_START;
 							}
 						}
 					  break;	
 				  case GAME_START:
 					  System.out.println("Game State: START");
-					  broadcast("START");
 					  gameStage=IN_PROGRESS;
 					  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
 							String name=(String)ite.next();
@@ -353,6 +353,7 @@ public class GameServer implements Runnable, Constants {
 							System.out.println(player.getPlace());
 					  }
 					  timer.setInitialDelay(0);
+					  broadcast("GAMESTART ");
 					  timer.start();
 					  break;
 				  case IN_PROGRESS:
@@ -473,13 +474,12 @@ public class GameServer implements Runnable, Constants {
 	}
 	
 	public void checkIfCorrectAll() {
-		System.out.println("NUMBR: "+numPlayers);
-		System.out.println("NUMBR2: "+numCorrectPlayers);
 		if (numCorrectPlayers == numPlayers-1) { //all players guessed right
 			numCorrectPlayers = 0;
 			clearAllCanvas();
 			timer.stop();
 			timer.setInitialDelay(0);
+			broadcast("NEWROUND ");
 			timer.start();
 		}
 	}

@@ -39,7 +39,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	/**
 	 * Flag to indicate whether this player has connected or not
 	 */
-	boolean connected=false;
+	boolean connected = false;
+	boolean gameStart = false;
 	
 	/**
 	 * get a datagram socket
@@ -71,7 +72,9 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	
 	private Color colorSelected;
 	public boolean isTurn;
+	public boolean newRound = false;
 	private String givenWord = null;
+	private int numPlayers;
 	/**
 	 * Basic constructor
 	 * @param server
@@ -192,6 +195,16 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				givenWord = data[1];
 				currentPlayer = data[2];
 			}
+			else if (connected && serverData.startsWith("GAMESTART")) {
+				gameStart = true;
+			}
+			else if (connected && serverData.startsWith("NEWROUND")) {
+				newRound = true;
+			}
+			else if (connected && serverData.startsWith("NUMPLAYERS")) {
+				String[] data = serverData.split(" ");
+				numPlayers = Integer.parseInt(data[1]);
+			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){
@@ -211,7 +224,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 					}
 					//show the changes
 					this.repaint();
-					
 				}			
 			}			
 		}
@@ -294,8 +306,20 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		return this.givenWord;
 	}
 	
+	public boolean getGameStart() {
+		return this.gameStart;
+	}
+	
+	public boolean getNewRound() {
+		return this.newRound;
+	}
+	
 	public String getCurrentPlayer() {
 		return this.currentPlayer;
+	}
+	
+	public int getNumPlayers() {
+		return this.numPlayers;
 	}
 	
 	public void sendHasGuessed() {
