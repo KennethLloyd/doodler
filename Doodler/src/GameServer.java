@@ -423,7 +423,7 @@ public class GameServer implements Runnable, Constants {
 						  String[] playerInfo = playerData.split(" ");					  
 						  String pname = playerInfo[1];
 						  System.out.println("Has Guessed");
-						  for(String s:playerInfo)System.out.println(s);
+//						  for(String s:playerInfo)System.out.println(s);
 						  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
 								String name=(String)ite.next();
 								if (name.equals(pname)) {
@@ -437,7 +437,7 @@ public class GameServer implements Runnable, Constants {
 									System.out.println("score place:"+player.getPlace());
 									System.out.println("score BASE:"+BASE_SCORE);
 									System.out.println("score guesser: "+(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
-									player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/numPlayers-1)));
+									player.setScore((MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
 									System.out.println(player.getScore());
 								}
 							}

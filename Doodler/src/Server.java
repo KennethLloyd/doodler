@@ -58,7 +58,9 @@ public class Server {
 					frame.dispose();
 					int numPlayers = Integer.parseInt(numOfPlayers.getText());
 					ChatServer cs = new ChatServer();
+
 					GameServer gs = new GameServer(numPlayers);
+
 					
 				} catch (Exception e1) {
 					e1.printStackTrace();

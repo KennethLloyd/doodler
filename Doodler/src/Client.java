@@ -46,11 +46,11 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JLabel player2 = null;
 	private JLabel player3 = null;
 	private JLabel currentPlayer = null;
-	
 	private String currentPlayerName = "";
 	
 	private GameClient gc = null;
 	private WordDisplay answerPanel = null;
+	protected JLabel player1score;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -65,7 +65,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		this.pack();
 		this.container = this.getContentPane();
 		this.un = uname;
-		System.out.println("Connecting...");
 		System.out.println("Enter to continue");
 		
 		JPanel space1 = new JPanel();
@@ -98,38 +97,48 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		timerPanel.add(currentPlayer);
 		
 		mainPanel = new JPanel(new BorderLayout());
-		JPanel scorePanel = new JPanel(new GridLayout(1,0));
-		scoreBoard = new JPanel(new GridLayout(0,1));
+//		JPanel scorePanel = new JPanel(new GridLayout(1,0));
+//		scoreBoard = new ScoreDisplay();
+//		
+//		scoreBoard.setBackground(Color.WHITE);
+//		scoreBoard.setPreferredSize(new Dimension(200, 100));
+//		
+//		JPanel player1Panel = new JPanel();
+//		JPanel player2Panel = new JPanel();
+//		JPanel player3Panel = new JPanel();
+//		
+//		BufferedImage i1 = ImageIO.read(new File("./rsc/char1.jpg"));
+//		BufferedImage i2 = ImageIO.read(new File("./rsc/char2.jpg"));
+//		BufferedImage i3 = ImageIO.read(new File("./rsc/char3.jpg"));
+//		JLabel player1 = new JLabel(new ImageIcon(i1));
+//		JLabel player2 = new JLabel(new ImageIcon(i2));
+//		JLabel player3 = new JLabel(new ImageIcon(i3));
+//		
+//		player1Panel.add(player1);
+//		
+//		player1score = new JLabel("0");
+//		player1Panel.add(new JLabel("PLAYER1: "));
+//		
+//		player1Panel.add(player1score);
+//		player1Panel.setBackground(Color.GRAY);
+//		player2Panel.add(player2);
+//		player2Panel.add(new JLabel("PLAYER2: 100"));
+//		player2Panel.setBackground(Color.WHITE);
+//		player3Panel.add(player3);
+//		player3Panel.add(new JLabel("PLAYER3: 100"));
+//		player3Panel.setBackground(Color.GRAY);
+//		
+//		JPanel player4Panel = new JPanel();
+//		player4Panel.add(player3);
+//		player4Panel.add(new JLabel("PLAYER3: 100"));
+//		player4Panel.setBackground(Color.GREEN);
+//		
+//		scoreBoard.add(player1Panel);
+//		scoreBoard.add(player2Panel);
+//		scoreBoard.add(player3Panel);
+//		scoreBoard.add(player4Panel);
+//		
 		
-		scoreBoard.setBackground(Color.WHITE);
-		scoreBoard.setPreferredSize(new Dimension(200, 100));
-		JPanel player1Panel = new JPanel();
-		JPanel player2Panel = new JPanel();
-		JPanel player3Panel = new JPanel();
-		
-		BufferedImage i1 = ImageIO.read(new File("./rsc/char1.jpg"));
-		BufferedImage i2 = ImageIO.read(new File("./rsc/char2.jpg"));
-		BufferedImage i3 = ImageIO.read(new File("./rsc/char3.jpg"));
-		JLabel player1 = new JLabel(new ImageIcon(i1));
-		JLabel player2 = new JLabel(new ImageIcon(i2));
-		JLabel player3 = new JLabel(new ImageIcon(i3));
-		player1Panel.add(player1);
-		player1Panel.add(new JLabel("PLAYER1: 100"));
-		player1Panel.setBackground(Color.GRAY);
-		player2Panel.add(player2);
-		player2Panel.add(new JLabel("PLAYER2: 100"));
-		player2Panel.setBackground(Color.WHITE);
-		player3Panel.add(player3);
-		player3Panel.add(new JLabel("PLAYER3: 100"));
-		player3Panel.setBackground(Color.GRAY);
-		
-		scoreBoard.add(player1Panel);
-		scoreBoard.add(player2Panel);
-		scoreBoard.add(player3Panel);
-		
-		scorePanel.add(scoreBoard);
-		
-		this.mainPanel.add(scorePanel, BorderLayout.WEST);
 		
 		try {
 			gc = new GameClient(serverName, un);
@@ -138,6 +147,12 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			e1.printStackTrace();
 		}
 	    
+		JPanel scorePanel = new JPanel(new GridLayout(1,0));
+		scoreBoard = new ScoreDisplay();
+		scorePanel.add(scoreBoard);
+		
+		this.mainPanel.add(scorePanel, BorderLayout.WEST);
+		
 	    canvasArea = new JPanel(new BorderLayout());
 	    canvasArea.add(gc, BorderLayout.CENTER);
 	    buttonArea = new JPanel(new GridLayout(2,3));
@@ -314,6 +329,8 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
 		        	String message = textArea.getText()+"\n";
 		        	textArea.setText("");
+//		        	player1score.setText(Integer.toString(Integer.parseInt(player1score.getText().toString())+1));
+//		        	ScoreDisplay.setScore(1);
 		        	send(message);
 		        	
 		        }

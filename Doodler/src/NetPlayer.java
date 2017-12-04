@@ -64,6 +64,7 @@ public class NetPlayer {
 		this.place = p;
 	}
 	public void setScore(int s){
+		System.out.println("inside"+s);
 		this.score += s;
 	}
 	public int getScore() {
