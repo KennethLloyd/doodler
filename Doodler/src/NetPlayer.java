@@ -15,13 +15,15 @@ public class NetPlayer {
 	 * The name of the player
 	 */
 	private String name;
-	
 	/**
 	 * The position of player
 	 */
 	private int x,y;
-	
+	private String givenWord;
 	private int startPos;
+	private int place;
+	private int score;
+	private boolean isTurn;
 
 	/**
 	 * Constructor
@@ -34,6 +36,7 @@ public class NetPlayer {
 		this.port = port;
 		this.name = name;
 		this.startPos = startPos;
+		this.score = 0;
 		System.out.println("Player " + this.startPos);
 	}
 
@@ -52,7 +55,22 @@ public class NetPlayer {
 	public int getPort(){
 		return port;
 	}
-
+	
+	public int getPlace() {
+		return this.place;
+		
+	}
+	public void setPlace(int p){
+		this.place = p;
+	}
+	public void setScore(int s){
+		System.out.println("inside"+s);
+		this.score += s;
+	}
+	public int getScore() {
+		return this.score;
+		
+	}
 	/**
 	 * Returns the name of the player
 	 * @return
@@ -97,6 +115,14 @@ public class NetPlayer {
 	
 	public int getStartPos() {
 		return this.startPos;
+	}
+	
+	public void setTurn(boolean isTurn) {
+		this.isTurn = isTurn;
+	}
+	
+	public boolean getTurn() {
+		return this.isTurn;
 	}
 
 	/**

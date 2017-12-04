@@ -1,12 +1,14 @@
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class GameState {
 	/**
 	 * This is a map(key-value pair) of <player name,NetPlayer>
 	 */
-	private Map players=new HashMap();
+	private int round = 0;
+	private Map players=new LinkedHashMap();
 	
 	/**
 	 * Simple constructor
@@ -43,5 +45,13 @@ public class GameState {
 	 */
 	public Map getPlayers(){
 		return players;
+	}
+
+	public int getRound() {
+		return round;
+	}
+
+	public void setRound(int round) {
+		this.round = round;
 	}
 }

@@ -1,5 +1,7 @@
 import javax.swing.*;
 
+import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
+
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -25,6 +27,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Nice name!
 	 */
 	String name="Joseph";
+	String currentPlayer;
 	
 	/**
 	 * Player name of others
@@ -35,11 +38,11 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	 * Server to connect to
 	 */
 	String server="localhost";
-
 	/**
 	 * Flag to indicate whether this player has connected or not
 	 */
-	boolean connected=false;
+	boolean connected = false;
+	boolean gameStart = false;
 	
 	/**
 	 * get a datagram socket
@@ -51,25 +54,35 @@ public class GameClient extends JPanel implements Runnable, Constants {
      * Placeholder for data received from server
      */
 	String serverData;
-	
 	/**	
 	 * Offscreen image for double buffering, for some
 	 * real smooth animation :)
 	 */
 	BufferedImage offscreen;
+	NetPlayer netplayer;
+	
 	int x1, y1, y2, x2;
-	public static boolean isClear = false;
-	public static boolean redChanged = false;
-	public static boolean blueChanged = false;
-	public static boolean blackChanged = false;
 	private boolean receivedClear = false;
 	private boolean clearItself = false;
 	private boolean receivedRed = false;
 	private boolean receivedBlack = false;
 	private boolean receivedBlue = false;
+	private boolean receivedYellow = false;
+	private boolean receivedGreen = false;
+	private boolean receivedWhite = false;
+	private boolean receivedPink = false;
 	
 	private Color colorSelected;
-	
+	public boolean isTurn;
+	public boolean newRound = false;
+	public boolean endgame = false;
+	public boolean resScore = false;
+	private String givenWord = null;
+	private int numPlayers;
+
+	private String[] names;
+
+	public String[] scores ;
 	/**
 	 * Basic constructor
 	 * @param server
@@ -103,9 +116,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}
 			
 		});
-
-		//tiime to play
-		//t.start();		
+	
 	}
 	
 	public Thread getThread() {
@@ -167,6 +178,55 @@ public class GameClient extends JPanel implements Runnable, Constants {
 			}else if (connected && serverData.startsWith("BLUE")) {
 				receivedBlue = true;
 				changeColorBlue(Color.BLUE);
+			}else if (connected && serverData.startsWith("YELLOW")) {
+				receivedYellow = true;
+				changeColorYellow(Color.YELLOW);
+			}else if (connected && serverData.startsWith("GREEN")) {
+				receivedGreen = true;
+				changeColorGreen(Color.GREEN);
+			}else if (connected && serverData.startsWith("WHITE")) {
+				receivedWhite = true;
+				changeColorWhite(Color.WHITE);
+			}else if (connected && serverData.startsWith("PINK")) {
+				receivedPink = true;
+				changeColorPink(Color.PINK);
+			}
+			else if (connected && serverData.startsWith("YOURTURN")) {
+				isTurn = true;
+				String[] data = serverData.split(" ");
+				givenWord = data[1];
+				currentPlayer = data[2];
+			}
+			else if (connected && serverData.startsWith("NOTYOURTURN")) {
+				isTurn = false;
+				String[] data = serverData.split(" ");
+				givenWord = data[1];
+				currentPlayer = data[2];
+			}
+			else if (connected && serverData.startsWith("GAMESTART")) {
+				gameStart = true;
+			}
+			else if (connected && serverData.startsWith("NEWROUND")) {
+				newRound = true;
+			}
+			else if (connected && serverData.startsWith("NUMPLAYERS")) {
+				String[] data = serverData.split(" ");
+				numPlayers = Integer.parseInt(data[1]);
+			}
+			else if (connected && serverData.startsWith("PLAYERNAMES")) {
+				String[] data = serverData.split(" ");
+				String pn = data[1];
+				names = pn.split(";");
+			}
+			else if (connected && serverData.startsWith("SCORES")) {
+				String[] data = serverData.split(" ");
+				String pn = data[1];
+				scores = pn.split(";");
+				System.out.println("SCORE SETTING");
+				resScore = true;
+			}
+			else if (connected && serverData.startsWith("ENDGAME")) {
+				endgame = true;
 			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
@@ -174,7 +234,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 					String[] playersInfo = serverData.split(":");
 					for (int i=0;i<playersInfo.length;i++){
 						String[] playerInfo = playersInfo[i].split(" ");
-						String pname =playerInfo[1];
+						String pname = playerInfo[1];
 						int x = Integer.parseInt(playerInfo[2]);
 						int y = Integer.parseInt(playerInfo[3]);
 						//draw on the offscreen image
@@ -187,7 +247,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 					}
 					//show the changes
 					this.repaint();
-					
 				}			
 			}			
 		}
@@ -220,19 +279,91 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		}
 		this.receivedBlack = false;
 	}
+	public void changeColorYellow(Color c){
+		this.colorSelected = c;
+		if (!receivedYellow) {
+			send("YELLOW " + name);
+		}
+		this.receivedYellow = false;
+	}
+	public void changeColorGreen(Color c){
+		this.colorSelected = c;
+		if (!receivedGreen) {
+			send("GREEN " + name);
+		}
+		this.receivedGreen = false;
+	}
+	public void changeColorWhite(Color c){
+		this.colorSelected = c;
+		if (!receivedWhite) {
+			send("WHITE " + name);
+		}
+		this.receivedWhite = false;
+	}
+	public void changeColorPink(Color c){
+		this.colorSelected = c;
+		if (!receivedPink) {
+			send("PINK " + name);
+		}
+		this.receivedPink = false;
+	}
 		
 	public void clearPane(){
-		offscreen = (BufferedImage)this.createImage(640, 640);
-		repaint();
-		if (!receivedClear || clearItself) send("CLEAR " + name);
-		clearItself = false;
-		receivedClear = false;
+		if (isTurn || receivedClear) { //can only clear if its his turn or the current players clear itself
+			offscreen = (BufferedImage)this.createImage(640, 640);
+			repaint();
+			if (!receivedClear || clearItself) send("CLEAR " + name);
+			clearItself = false;
+			receivedClear = false;
+		}
+		else {
+			clearItself = false;
+		}
 	}
 	
 	public void setClearItself(boolean clearItself) {
 		this.clearItself = clearItself;
 	}
 	
+	public String getWord() {
+		return this.givenWord;
+	}
+	
+	public boolean getGameStart() {
+		return this.gameStart;
+	}
+	
+	public boolean getNewRound() {
+		return this.newRound;
+	}
+	
+	public String getCurrentPlayer() {
+		return this.currentPlayer;
+	}
+	
+	public int getNumPlayers() {
+		return this.numPlayers;
+	}
+	
+	public boolean getReceivedScore() {
+		return this.resScore;
+	}
+	
+	public void setReceivedScore(boolean b) {
+		this.resScore = b;
+	}
+	
+	public String[] getNames() {
+		return this.names;
+	}
+	public void sendHasGuessed() {
+		send("GUESSED " + name);
+	}
+	@SuppressWarnings("deprecation")
+	public void stopThread(){
+		this.t.stop();
+	}
+
 	class KeyHandler extends KeyAdapter{
 		public void keyPressed(KeyEvent ke){
 			prevX=x;prevY=y;
@@ -246,6 +377,10 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				send("PLAYER "+name+" "+x+" "+y);
 			}	
 		}
+	}
+
+	public void setGameStart(boolean b) {
+		this.gameStart = b;
 	}
 }
    

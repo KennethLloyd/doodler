@@ -1,9 +1,7 @@
-import java.io.IOException;
+import java.io.*;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Map;
+import java.util.*;
 
 import javax.swing.Timer;
 
@@ -14,8 +12,9 @@ public class GameServer implements Runnable, Constants {
 	 * Placeholder for the data received from the player
 	 */	 
 	String playerData;
+	String currentPlayer;
 	
-	int turn = 1;
+	int turn = 0;
 	
 	/**
 	 * The number of currently connected player
@@ -41,13 +40,18 @@ public class GameServer implements Runnable, Constants {
 	 * Number of players
 	 */
 	int numPlayers;
+	int numCorrectPlayers;
 	
 	/**
 	 * The main game thread
 	 */
 	Thread t = new Thread(this);
-	
+	String currentWord;
 	Timer timer = null;
+	int index;
+	private ArrayList<String> wordList = new ArrayList();
+	private ArrayList<String> usedWords = new ArrayList();
+	
 	/**
 	 * Simple constructor
 	 */
@@ -65,19 +69,103 @@ public class GameServer implements Runnable, Constants {
 		
 		System.out.println("Game created...");
 		
-		timer = new Timer(10000, new ActionListener() {
+		/*puts words into arrayList*/
+		readFile();
+		/*randomize word*/
+		final Random rand = new Random();
+		index = rand.nextInt(wordList.size());
+		currentWord = wordList.get(index);
+		usedWords.add(currentWord);
+		//then notify players then give them the word
+		
+		//Start the game thread
+		t.start();
+		
+		timer = new Timer(80000, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				if (turn != numPlayers) {
+				numCorrectPlayers=0;
+				if (turn != numPlayers) {//set next player
 					turn++;
 				}
 				else {
+					setDoodlerScore(turn,numCorrectPlayers);
 					turn = 1;
+					game.setRound(game.getRound()+1);
+				}
+				if(game.getRound()==MAX_ROUND){//set next round
+					gameStage = END_GAME;
+				}
+				else{
+					do {//get the word to draw
+						index = rand.nextInt(wordList.size());
+						currentWord = wordList.get(index);
+						if (wordList.size() == usedWords.size()) {
+							break;
+						}
+					}while(usedWords.contains(currentWord));
+						
+					usedWords.add(currentWord);
+
+					notifyPlayers();
+					clearAllCanvas();
 				}
 			}
 			
 		});
-		//Start the game thread
-		t.start();
+	}
+	
+	public void getCurrentPlayerName() {
+		 for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+				String name=(String)ite.next();
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+				if (turn == player.getStartPos()) {
+					currentPlayer = player.getName();
+				}
+		  }
+	}
+	
+	public void checkDoodlerScore(int turn){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+			if (turn == player.getStartPos()) {
+				player.setPlace(numCorrectPlayers);
+				player.setScore((MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
+			}
+	  }
+	}
+	public void setDoodlerScore(int turn, int numCorrectPlayers){
+		System.out.println("Entered setting doodler score");
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+			if (turn == player.getStartPos()) {
+				System.out.println(player.getName());
+				System.out.println(player.getScore());
+				System.out.println(numCorrectPlayers);
+				System.out.println(player.getPlace());
+				player.setPlace(numCorrectPlayers);
+				System.out.println("score MAX:"+MAX_SCORE);
+				System.out.println("score place:"+player.getPlace());
+				System.out.println("score BASE:"+BASE_SCORE);
+				player.setPlace(numCorrectPlayers);
+				System.out.println("score player: "+(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
+				player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
+			}
+	  }
+	}
+	public void notifyPlayers() {
+		//broadcast the current word and notify the players if its already their turn
+		  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+				String name=(String)ite.next();
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+				if (turn == player.getStartPos()) {
+					send(player, "YOURTURN " + currentWord + " " + currentPlayer);
+				}
+				else {
+					send(player, "NOTYOURTURN " + currentWord + " " + currentPlayer);
+				}
+		  }
 	}
 	
 	/**
@@ -128,6 +216,42 @@ public class GameServer implements Runnable, Constants {
 			}
 		}
 	}
+	public void broadcastChangeYellow(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "YELLOW ");
+			}
+		}
+	}
+	public void broadcastChangeGreen(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "GREEN ");
+			}
+		}
+	}
+	public void broadcastChangeWhite(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "WHITE ");
+			}
+		}
+	}
+	public void broadcastChangePink(String senderName){
+		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			if (!name.equals(senderName)) {
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);
+				send(player, "PINK ");
+			}
+		}
+	}
 
 
 	/**
@@ -143,6 +267,31 @@ public class GameServer implements Runnable, Constants {
 			serverSocket.send(packet);
 		}catch(IOException ioe){
 			ioe.printStackTrace();
+		}
+	}
+	
+	/*read files*/
+	public void readFile() {
+		FileReader fr = null;
+		BufferedReader br = null;
+		int i=0;
+		
+		try {
+			fr = new FileReader("./rsc/words.txt");
+			br = new BufferedReader(fr);
+			
+			String word;
+
+			while ((word = br.readLine()) != null) {
+				wordList.add(word);
+				System.out.println(word);
+				i++;
+			}
+
+		} catch (IOException e) {
+
+			e.printStackTrace();
+
 		}
 	}
 	
@@ -167,9 +316,6 @@ public class GameServer implements Runnable, Constants {
 			
 			//remove excess bytes
 			playerData = playerData.trim();
-			//if (!playerData.equals("")){
-			//	System.out.println("Player Data:"+playerData);
-			//}
 		
 			// process
 			switch(gameStage){
@@ -184,19 +330,34 @@ public class GameServer implements Runnable, Constants {
 							broadcast("CONNECTED "+tokens[1]);
 							playerCount++;
 							if (playerCount==numPlayers){
+								String names="";
+								for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+									String name=(String)ite.next();
+									names += (name+";");
+									
+								}
+								broadcast("PLAYERNAMES " + names);
+								broadcast("NUMPLAYERS " + numPlayers);
+								
 								gameStage=GAME_START;
 							}
 						}
 					  break;	
 				  case GAME_START:
 					  System.out.println("Game State: START");
-					  broadcast("START");
 					  gameStage=IN_PROGRESS;
+					  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+							String name=(String)ite.next();
+							NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+							player.setPlace((2*numPlayers)-1);
+							player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
+							System.out.println(player.getPlace());
+					  }
+					  timer.setInitialDelay(0);
+					  broadcast("GAMESTART ");
 					  timer.start();
 					  break;
 				  case IN_PROGRESS:
-					  //System.out.println("Game State: IN_PROGRESS");
-					  
 					  //Player data was received!
 					  if (playerData.startsWith("PLAYER")){
 						  //Tokenize:
@@ -214,7 +375,7 @@ public class GameServer implements Runnable, Constants {
 							  game.update(pname, player);
 							  //Send to all the updated game state
 							  broadcast(game.toString());  
-						  }	
+						  }
 					  }
 					  
 					  else if (playerData.startsWith("CLEAR")) {
@@ -240,9 +401,94 @@ public class GameServer implements Runnable, Constants {
 						  String pname = playerInfo[1];
 						  broadcastChangeBlack(pname);
 					  }
+					  else if (playerData.startsWith("YELLOW")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeYellow(pname);
+					  }
+					  else if (playerData.startsWith("GREEN")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeGreen(pname);
+					  }
+					  else if (playerData.startsWith("WHITE")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangeWhite(pname);
+					  }
+					  else if (playerData.startsWith("PINK")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+						  broadcastChangePink(pname);
+					  }
+					  else if (playerData.startsWith("GUESSED ")) {
+						  String[] playerInfo = playerData.split(" ");					  
+						  String pname = playerInfo[1];
+
+						  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+								String name=(String)ite.next();
+								if (name.equals(pname)) {
+									NetPlayer player=(NetPlayer)game.getPlayers().get(pname);
+									System.out.println(pname);
+									System.out.println(player.getScore());
+									System.out.println(numCorrectPlayers+1);
+									System.out.println(player.getPlace());
+									player.setPlace(numCorrectPlayers+1);
+									System.out.println("score MAX:"+MAX_SCORE);
+									System.out.println("score place:"+player.getPlace());
+									System.out.println("score BASE:"+BASE_SCORE);
+									System.out.println("score guesser: "+(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
+									player.setScore((MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
+									System.out.println(player.getScore());
+									
+									numCorrectPlayers+=1;
+									checkIfCorrectAll();
+									break;
+								}
+							}
+						  String scoresTemp = "";
+						  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+								String name=(String)ite.next();
+								NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+								scoresTemp += (Integer.toString(player.getScore())+";");
+						  }
+						  broadcast("SCORES " + scoresTemp);
+					  }
 					  break;
-					
+				  case END_GAME:
+					  System.out.println("END_GAME");
+					  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+							String name=(String)ite.next();
+							
+							NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+							System.out.println(player.getName()+" : "+player.getScore()); 
+					  }
+					  gameStage=5;
+					  timer.stop();
+					  broadcast("ENDGAME ");
+					  break;
+				  case STATIC_GAME:
+					  break;
 			}				  
 		}
-	}	
+	}
+	
+	public void clearAllCanvas() { //before proceeding to next round
+	  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+			String name=(String)ite.next();
+			NetPlayer player=(NetPlayer)game.getPlayers().get(name);//Lois:para saan to			
+			broadcastClear(name); 
+	  }
+	}
+	
+	public void checkIfCorrectAll() {
+		if (numCorrectPlayers == numPlayers-1) { //all players guessed right
+			numCorrectPlayers = 0;
+			clearAllCanvas();
+			timer.stop();
+			timer.setInitialDelay(0);
+			broadcast("NEWROUND ");
+			timer.start();
+		}
+	}
 }
