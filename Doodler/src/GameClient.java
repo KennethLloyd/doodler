@@ -382,5 +382,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public void setGameStart(boolean b) {
 		this.gameStart = b;
 	}
+	
 }
+
    

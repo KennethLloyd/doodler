@@ -272,6 +272,16 @@ public class Client extends JFrame implements Runnable, ActionListener {
 				time.setText("GAME OVER");
 				time.setFont(new Font("Serif", Font.PLAIN, 30));
 				gc.newRound = false;
+				//gameOver(true);
+				System.out.println("NR: " + gc.newRound);
+				try {
+					gameOver(true);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.stop();
+				
 			}
 			if (gc.getNewRound() == true) {
 				timer.stop();
@@ -417,6 +427,35 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		else if(arg0.getSource().equals(clearButton)){
 			gc.setClearItself(true);
 			gc.clearPane();
+		}
+	}
+	public void gameOver(boolean b) throws IOException {
+		if(b) {
+			JFrame endFrame= new JFrame();
+			endFrame.setPreferredSize(new Dimension(380,300));
+			endFrame.setResizable(false);
+			endFrame.pack();
+			endFrame.setLocationRelativeTo(null);
+			
+			JPanel panel = new JPanel(new GridLayout(4,0));
+			BufferedImage go = ImageIO.read(new File("./rsc/gameover.png"));
+			Image gameover = go.getScaledInstance(150,70,Image.SCALE_SMOOTH);
+			JLabel label1 = new JLabel("", new ImageIcon(gameover), SwingConstants.CENTER);
+			String highScorer = this.scoreBoard.getHighScorer().toUpperCase();
+			highScorer = highScorer.substring(0, highScorer.length()-2);
+			System.out.println(highScorer);
+			JLabel label2 = new JLabel(highScorer, SwingConstants.CENTER);
+			label2.setForeground(Color.RED);
+			JLabel label3 = new JLabel("WINNER:", SwingConstants.CENTER);
+			
+			panel.setBackground(Color.WHITE);
+			panel.add(label1);
+			panel.add(label3);
+			panel.add(label2);
+			endFrame.add(panel);
+			
+			endFrame.setVisible(true);
+		
 		}
 	}
 
