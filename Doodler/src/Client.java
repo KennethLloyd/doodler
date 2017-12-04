@@ -269,6 +269,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		while (thread != null) {
 			if (gc.endgame == true) {
 				timer.stop();
+				this.stop();
 				time.setText("GAME OVER");
 				time.setFont(new Font("Serif", Font.PLAIN, 30));
 				gc.newRound = false;
@@ -283,6 +284,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			}
 			
 			if (currentPlayerName != gc.getCurrentPlayer()) {
+				System.out.println(gc.getCurrentPlayer());
 				currentPlayerName = gc.getCurrentPlayer();
 				currentPlayer.setText(currentPlayerName + "'s TURN");
 			}
@@ -314,7 +316,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			stop();
 		}
 		
-		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn && ownAnswer == true) {
+		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !this.gc.isTurn && ownAnswer == true) {
 			chatArea.append(sub[0]+": CORRECT ANSWER\n");
 			ownAnswer = false;
 			gc.sendHasGuessed();

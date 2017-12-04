@@ -1,7 +1,5 @@
 import javax.swing.*;
 
-import com.sun.xml.internal.bind.v2.runtime.unmarshaller.XsiNilLoader.Array;
-
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.*;
@@ -73,7 +71,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	private boolean receivedPink = false;
 	
 	private Color colorSelected;
-	public boolean isTurn;
+	public boolean isTurn = false;
 	public boolean newRound = false;
 	public boolean endgame = false;
 	public boolean resScore = false;

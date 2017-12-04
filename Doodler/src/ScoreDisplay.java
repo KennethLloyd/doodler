@@ -48,7 +48,7 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		JPanel player1Panel = new JPanel();
 		BufferedImage i1=null;
 		try {
-			i1 = ImageIO.read(new File("./rsc/char"+Integer.toString(names.size()+1)+".jpg"));
+			i1 = ImageIO.read(new File("./rsc/char"+Integer.toString(names.size()+1)+".png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -68,17 +68,18 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		
 		
 	}
-	public void setScore(int pos) {
-		scores.get(pos).setText("Y");
-	}
-	@Override
 	public void run() {
 		
 		while(true) {
-			System.out.println("from sd: " + gc.getReceivedScore());
+//			System.out.println("from sd: " + gc.getReceivedScore());
+			try {
+				t.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if (gc.getReceivedScore() == true) {
 				for(int i = 0;i<scores.size();i++) {
-					System.out.println("RUN"+gc.scores[i]);
+//					System.out.println("RUN"+gc.scores[i]);
 					scores.get(i).setText(gc.scores[i]);
 				}
 				gc.setReceivedScore(false);
