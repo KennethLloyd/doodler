@@ -358,7 +358,7 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		return this.names;
 	}
 	public void sendHasGuessed() {
-//		hasGuessed = true;
+		hasGuessed = true;
 		send("GUESSED " + name);
 	}
 	@SuppressWarnings("deprecation")

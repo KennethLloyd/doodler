@@ -85,12 +85,10 @@ public class GameServer implements Runnable, Constants {
 			public void actionPerformed(ActionEvent e) {
 				numCorrectPlayers=0;
 				if (turn != numPlayers) {//set next player
-					
+					broadcast("NEWROUND ");
 					turn++;
 				}
 				else {
-
-//					setDoodlerScore(turn,numCorrectPlayers);
 					turn = 1;
 					game.setRound(game.getRound()+1);
 				}

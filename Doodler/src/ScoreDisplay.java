@@ -47,17 +47,14 @@ public class ScoreDisplay extends JPanel implements Runnable{
 	public String getHighScorer() {
 		String highScorer = "";
 		int hs = 0;
-		for(int i=0; i<scores.size(); i++) {
-			for(int j = 0; j<scores.size();j++) {
-				if(Integer.parseInt(scores.get(j).getText())>Integer.parseInt(scores.get(i).getText())) {
-					hs = j;
-				}else {
-					hs = i;
-				}
+		for(int i=1; i<scores.size(); i++) {
+			if(Integer.parseInt(scores.get(i).getText())>Integer.parseInt(scores.get(hs).getText())) {
+				hs = i;
 			}
 		}
 		highScorer = names.get(hs).getText();
 		//System.out.println(highScorer);
+		t.stop();
 		return highScorer;		
 	}
 	public void addToScorePanel(String uname) {
