@@ -71,7 +71,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	
 	private Color colorSelected;
 	public boolean isTurn;
-	private boolean hasGuessed = false;
 	private String givenWord = null;
 	/**
 	 * Basic constructor
@@ -299,10 +298,8 @@ public class GameClient extends JPanel implements Runnable, Constants {
 		return this.currentPlayer;
 	}
 	
-	public void setHasGuessed(boolean hasGuessed) {
-		this.hasGuessed = hasGuessed;
+	public void sendHasGuessed() {
 		send("GUESSED " + name);
-		this.hasGuessed = false;
 	}
 	@SuppressWarnings("deprecation")
 	public void stopThread(){

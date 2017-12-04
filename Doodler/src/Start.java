@@ -25,7 +25,7 @@ public class Start implements MouseListener {
 		BufferedImage logo = ImageIO.read(new File("./rsc/logoandtext.png"));
 		Image logoPic = logo.getScaledInstance(180,160,Image.SCALE_SMOOTH);
 		
-		final JFrame frame = new JFrame("Start");
+		final JFrame frame = new JFrame("Client");
 		frame.setPreferredSize(new Dimension(300,380));
 		frame.setResizable(false);
 		frame.pack();

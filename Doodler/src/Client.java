@@ -46,6 +46,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JLabel player2 = null;
 	private JLabel player3 = null;
 	private JLabel currentPlayer = null;
+	private boolean ownAnswer = false;
 	
 	private String currentPlayerName = "";
 	
@@ -247,13 +248,15 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			stop();
 		}
 		
-		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn) {
+		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn && ownAnswer == true) {
 			chatArea.append(sub[0]+": CORRECT ANSWER\n");
-			gc.setHasGuessed(true);
+			ownAnswer = false;
+			gc.sendHasGuessed();
 			System.out.print("CORRECT");
 		}
 		else {
 			//System.out.println(this.chatArea.getText());
+			ownAnswer = false;
 			chatArea.append(msg);
 			System.out.println(msg);
 		}
@@ -311,8 +314,8 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
 		        	String message = textArea.getText()+"\n";
 		        	textArea.setText("");
+		        	ownAnswer = true;
 		        	send(message);
-		        	
 		        }
 		    }
 
