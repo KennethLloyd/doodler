@@ -193,10 +193,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				givenWord = data[1];
 				currentPlayer = data[2];
 			}
-			else if (connected && serverData.startsWith("CURRENTPLAYER")) {
-				String[] data = serverData.split(" ");
-				currentPlayer = data[1];
-			}
 			else if (connected){
 				//offscreen.getGraphics().clearRect(0, 0, 640, 480);
 				if (serverData.startsWith("PLAYER")){

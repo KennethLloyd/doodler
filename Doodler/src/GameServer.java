@@ -111,7 +111,7 @@ public class GameServer implements Runnable, Constants {
 //						
 //						checkDoodlerScore(turn);
 //					}
-
+					getCurrentPlayerName();
 					notifyPlayers();
 					clearAllCanvas();
 				}

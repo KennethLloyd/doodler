@@ -201,8 +201,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    this.add(space4, BorderLayout.EAST);
 	    this.add(space5, BorderLayout.WEST);
 	    
-	    
-	    
 		try {
 			socket = new Socket(serverName, portno);
 			out = new DataOutputStream(socket.getOutputStream());
@@ -270,7 +268,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			thread = new Thread(this);
 			thread.start();
 			gc.getThread().start();
-			//System.out.println("cp: " + gc.getCurrentPlayer());
 		}
 		
 	}
