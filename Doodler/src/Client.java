@@ -148,7 +148,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		}
 	    
 		JPanel scorePanel = new JPanel(new GridLayout(1,0));
-		scoreBoard = new ScoreDisplay();
+//		scoreBoard = new ScoreDisplay();
 		scorePanel.add(scoreBoard);
 		
 		this.mainPanel.add(scorePanel, BorderLayout.WEST);
