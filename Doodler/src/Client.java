@@ -287,7 +287,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 				currentPlayer.setText(currentPlayerName + "'s TURN");
 			}
 			if (gc.getGameStart() == true) {
-				scoreBoard.setNumPlayers(gc.getNames(),gc.getNumPlayers(),gc);
+				scoreBoard.setNumPlayers(gc.getNames(),gc.getNumPlayers());
 				timer.start();
 				gc.setGameStart(false);
 			}

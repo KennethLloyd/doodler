@@ -76,13 +76,13 @@ public class GameClient extends JPanel implements Runnable, Constants {
 	public boolean isTurn;
 	public boolean newRound = false;
 	public boolean endgame = false;
-	public boolean resScore = true;
+	public boolean resScore = false;
 	private String givenWord = null;
 	private int numPlayers;
 
 	private String[] names;
 
-	public String[] scores;
+	public String[] scores ;
 	/**
 	 * Basic constructor
 	 * @param server

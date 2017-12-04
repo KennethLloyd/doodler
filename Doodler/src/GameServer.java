@@ -106,12 +106,6 @@ public class GameServer implements Runnable, Constants {
 						
 					usedWords.add(currentWord);
 
-					System.out.println("NEW TURN: "+ turn);
-//					if(numCorrectPlayers!=1) {//if the 
-//						
-//						checkDoodlerScore(turn);
-//					}
-					getCurrentPlayerName();
 					notifyPlayers();
 					clearAllCanvas();
 				}
@@ -136,8 +130,7 @@ public class GameServer implements Runnable, Constants {
 			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
 			if (turn == player.getStartPos()) {
 				player.setPlace(numCorrectPlayers);
-				player.setPlace(numCorrectPlayers);
-				player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
+				player.setScore((MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
 			}
 	  }
 	}
