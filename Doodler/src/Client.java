@@ -45,6 +45,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JLabel player1 = null;
 	private JLabel player2 = null;
 	private JLabel player3 = null;
+	private JLabel currentPlayer = null;
+	
+	private String currentPlayerName = "";
 	
 	private GameClient gc = null;
 	private WordDisplay answerPanel = null;
@@ -89,9 +92,10 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		BufferedImage timerImg = ImageIO.read(new File("./rsc/timer.png"));
 		Image timerImg1 = timerImg.getScaledInstance(60,60,Image.SCALE_SMOOTH);
 		JLabel label1 = new JLabel("", new ImageIcon(timerImg1), SwingConstants.LEFT);
+		currentPlayer = new JLabel();
 		timerPanel.add(label1);
 		timerPanel.add(new JLabel(" "));
-		timerPanel.add(new JLabel("PLAYER1'S TURN"));
+		timerPanel.add(currentPlayer);
 		
 		mainPanel = new JPanel(new BorderLayout());
 		JPanel scorePanel = new JPanel(new GridLayout(1,0));
@@ -219,7 +223,12 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	
 	public void run() {
 		while (thread != null) {
-			try {
+			if (currentPlayerName != gc.getCurrentPlayer()) {
+				currentPlayerName = gc.getCurrentPlayer();
+				currentPlayer.setText(currentPlayerName + "'s TURN");
+			}
+			if (client == null) client = new ClientThread(this, socket);
+			try {				
 				if(!in.isEmpty()){
 					out.writeUTF(in); //send the input to server to be distributed
 					out.flush();
@@ -227,9 +236,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 					Thread.sleep(1000);
 				}
 				
-				answerPanel.getThread().start();
 				start(); //start another receiver
 			}catch(Exception e) {}
+			
 		}
 	}
 	
@@ -257,11 +266,11 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		
 		out = new DataOutputStream(socket.getOutputStream()); //for server
 		if (thread == null) {
-			client = new ClientThread(this, socket);
+			//client = new ClientThread(this, socket);
 			thread = new Thread(this);
 			thread.start();
 			gc.getThread().start();
-			
+			//System.out.println("cp: " + gc.getCurrentPlayer());
 		}
 		
 	}

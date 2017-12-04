@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
+import javax.swing.BoxLayout;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
@@ -44,7 +45,7 @@ public class Server {
 		panel1.setOpaque(false);
 		
 		JLabel numOfPlayersLbl = new JLabel("Enter number of players: ");
-		JTextField numOfPlayers = new JTextField(10);
+		final JTextField numOfPlayers = new JTextField(10);
 		
 		numOfPlayers.setBounds(88, 58, 76, 21);
 		

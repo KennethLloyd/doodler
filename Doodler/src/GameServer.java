@@ -12,8 +12,9 @@ public class GameServer implements Runnable, Constants {
 	 * Placeholder for the data received from the player
 	 */	 
 	String playerData;
+	String currentPlayer;
 	
-	int turn = 1;
+	int turn = 0;
 	
 	/**
 	 * The number of currently connected player
@@ -104,35 +105,38 @@ public class GameServer implements Runnable, Constants {
 					}while(usedWords.contains(currentWord));
 						
 					usedWords.add(currentWord);
+
 					System.out.println("NEW TURN: "+ turn);
 //					if(numCorrectPlayers!=1) {//if the 
 //						
 //						checkDoodlerScore(turn);
 //					}
+
 					notifyPlayers();
 					clearAllCanvas();
 				}
-				
 			}
 			
 		});
 	}
+	
+	public void getCurrentPlayerName() {
+		 for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+				String name=(String)ite.next();
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+				if (turn == player.getStartPos()) {
+					currentPlayer = player.getName();
+				}
+		  }
+	}
+	
 	public void checkDoodlerScore(int turn){
-		System.out.println("inside new turn: "+turn);
 		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
 			String name=(String)ite.next();
 			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
 			if (turn == player.getStartPos()) {
-				System.out.println(player.getName());
-				System.out.println(player.getScore());
-				System.out.println(numCorrectPlayers);
-				System.out.println(player.getPlace());
 				player.setPlace(numCorrectPlayers);
-				System.out.println("score MAX:"+MAX_SCORE);
-				System.out.println("score place:"+player.getPlace());
-				System.out.println("score BASE:"+BASE_SCORE);
 				player.setPlace(numCorrectPlayers);
-				System.out.println("score player: "+(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
 				player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
 			}
 	  }
@@ -163,10 +167,10 @@ public class GameServer implements Runnable, Constants {
 				String name=(String)ite.next();
 				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
 				if (turn == player.getStartPos()) {
-					send(player, "YOURTURN " + currentWord);
+					send(player, "YOURTURN " + currentWord + " " + currentPlayer);
 				}
 				else {
-					send(player, "NOTYOURTURN " + currentWord);
+					send(player, "NOTYOURTURN " + currentWord + " " + currentPlayer);
 				}
 		  }
 	}
@@ -348,8 +352,8 @@ public class GameServer implements Runnable, Constants {
 							player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
 							System.out.println(player.getPlace());
 					  }
+					  timer.setInitialDelay(0);
 					  timer.start();
-					  notifyPlayers();
 					  break;
 				  case IN_PROGRESS:
 					  //Player data was received!
