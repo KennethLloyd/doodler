@@ -46,11 +46,17 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	private JLabel player2 = null;
 	private JLabel player3 = null;
 	private JLabel currentPlayer = null;
-	private String currentPlayerName = "";
+
+	private JLabel time = null;
+	private boolean ownAnswer = false;
 	
+	private String currentPlayerName = "";
+	private Timer timer = null;
 	private GameClient gc = null;
 	private WordDisplay answerPanel = null;
-	protected JLabel player1score;
+
+
+	private int count = 80;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -92,7 +98,11 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		Image timerImg1 = timerImg.getScaledInstance(60,60,Image.SCALE_SMOOTH);
 		JLabel label1 = new JLabel("", new ImageIcon(timerImg1), SwingConstants.LEFT);
 		currentPlayer = new JLabel();
+		time = new JLabel("80");
+		time.setFont(new Font("Serif", Font.PLAIN, 30));
+		timerPanel.add(new JLabel(" "));
 		timerPanel.add(label1);
+		timerPanel.add(time);
 		timerPanel.add(new JLabel(" "));
 		timerPanel.add(currentPlayer);
 		
@@ -216,7 +226,20 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	    this.add(space4, BorderLayout.EAST);
 	    this.add(space5, BorderLayout.WEST);
 	    
-	    
+	    timer = new Timer(1000, new ActionListener() {
+	        public void actionPerformed(ActionEvent e) {
+	            if (count <= 0) {
+	                time.setText("TIME'S UP!");
+	                time.setFont(new Font("Serif", Font.PLAIN, 30));
+	                ((Timer)e.getSource()).stop();
+	                count = 80;
+	            } else {
+	                time.setText(Integer.toString(count));
+	                time.setFont(new Font("Serif", Font.PLAIN, 30));
+	                count--;
+	            }
+	        }
+	    });
 	    
 		try {
 			socket = new Socket(serverName, portno);
@@ -238,11 +261,24 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	
 	public void run() {
 		while (thread != null) {
+			if (gc.getNewRound() == true) {
+				timer.stop();
+				count = 80;
+				time.setText("80");
+				timer.setInitialDelay(0);
+				timer.start();
+				gc.newRound = false;
+			}
+			
 			if (currentPlayerName != gc.getCurrentPlayer()) {
 				currentPlayerName = gc.getCurrentPlayer();
 				currentPlayer.setText(currentPlayerName + "'s TURN");
 			}
+			if (gc.getGameStart() == true) {
+				timer.start();
+			}
 			if (client == null) client = new ClientThread(this, socket);
+
 			try {				
 				if(!in.isEmpty()){
 					out.writeUTF(in); //send the input to server to be distributed
@@ -264,13 +300,15 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			stop();
 		}
 		
-		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn) {
+		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn && ownAnswer == true) {
 			chatArea.append(sub[0]+": CORRECT ANSWER\n");
-			gc.setHasGuessed(true);
+			ownAnswer = false;
+			gc.sendHasGuessed();
 			System.out.print("CORRECT");
 		}
 		else {
 			//System.out.println(this.chatArea.getText());
+			ownAnswer = false;
 			chatArea.append(msg);
 			System.out.println(msg);
 		}
@@ -285,7 +323,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			thread = new Thread(this);
 			thread.start();
 			gc.getThread().start();
-			//System.out.println("cp: " + gc.getCurrentPlayer());
 		}
 		
 	}
@@ -329,10 +366,9 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		        if(e.getKeyCode() == KeyEvent.VK_ENTER){
 		        	String message = textArea.getText()+"\n";
 		        	textArea.setText("");
-//		        	player1score.setText(Integer.toString(Integer.parseInt(player1score.getText().toString())+1));
-//		        	ScoreDisplay.setScore(1);
+
+		        	ownAnswer = true;
 		        	send(message);
-		        	
 		        }
 		    }
 

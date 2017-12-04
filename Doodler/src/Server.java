@@ -26,7 +26,7 @@ public class Server {
 		BufferedImage logo = ImageIO.read(new File("./rsc/logoandtext.png"));
 		Image logoPic = logo.getScaledInstance(180,160,Image.SCALE_SMOOTH);
 		
-		final JFrame frame = new JFrame("Start");
+		final JFrame frame = new JFrame("Server");
 		frame.setPreferredSize(new Dimension(380,300));
 		frame.setResizable(false);
 		frame.pack();
