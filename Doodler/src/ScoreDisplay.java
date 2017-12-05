@@ -66,9 +66,11 @@ public class ScoreDisplay extends JPanel implements Runnable{
 			e.printStackTrace();
 		}
 		JLabel player1 = new JLabel(new ImageIcon(i1));
+		
 		JLabel player1score = new JLabel("0");
 		JLabel player1name = new JLabel(uname+": ");
-		
+		player1name.setForeground(Color.PINK);
+		player1score.setForeground(Color.GREEN);
 		
 		player1Panel.add(player1);
 		player1Panel.add(player1name);

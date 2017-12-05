@@ -406,13 +406,17 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			highScorer = highScorer.substring(0, highScorer.length()-2);
 //			System.out.println(highScorer);
 			JLabel label2 = new JLabel(highScorer, SwingConstants.CENTER);
+			label2.setFont(new Font("SERIF",Font.BOLD,30));
 			label2.setForeground(Color.RED);
 			JLabel label3 = new JLabel("WINNER:", SwingConstants.CENTER);
 			
-			panel.setBackground(Color.WHITE);
+			
+			
 			panel.add(label1);
 			panel.add(label3);
+			panel.add(new JLabel(new ImageIcon(ImageIO.read(new File("./rsc/winner-trophy.gif")))));
 			panel.add(label2);
+			
 			endFrame.add(panel);
 			
 			endFrame.setVisible(true);
