@@ -232,7 +232,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 				time.setFont(new Font("Serif", Font.PLAIN, 30));
 				gc.newRound = false;
 				//gameOver(true);
-				System.out.println("NR: " + gc.newRound);
 				try {
 					gameOver(true);
 				} catch (IOException e) {
@@ -252,7 +251,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			}
 			
 			if (currentPlayerName != gc.getCurrentPlayer()) {
-				System.out.println(gc.getCurrentPlayer());
 				currentPlayerName = gc.getCurrentPlayer();
 				currentPlayer.setText(currentPlayerName + "'s TURN");
 			}
@@ -283,8 +281,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			System.out.println("Bye");
 			stop();
 		}
-		System.out.print("isturn: "+this.gc.isTurn);
-		System.out.print("isown: "+ ownAnswer);
 		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !this.gc.isTurn && ownAnswer == true) {
 			if(!gc.getHasGuessed()){
 				ownAnswer = false;
@@ -299,7 +295,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			//System.out.println(this.chatArea.getText());
 			ownAnswer = false;
 			chatArea.append(msg);
-			System.out.println(msg);
+//			System.out.println(msg);
 		}
 	}
 
@@ -408,7 +404,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			JLabel label1 = new JLabel("", new ImageIcon(gameover), SwingConstants.CENTER);
 			String highScorer = this.scoreBoard.getHighScorer().toUpperCase();
 			highScorer = highScorer.substring(0, highScorer.length()-2);
-			System.out.println(highScorer);
+//			System.out.println(highScorer);
 			JLabel label2 = new JLabel(highScorer, SwingConstants.CENTER);
 			label2.setForeground(Color.RED);
 			JLabel label3 = new JLabel("WINNER:", SwingConstants.CENTER);

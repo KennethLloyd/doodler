@@ -24,7 +24,6 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		this.gc = gc;
 		this.setLayout(new GridLayout(1,0));
 		scoreBoard = new JPanel(new GridLayout(0,1));
-		System.out.println(numPlayers);
 		scoreBoard.setBackground(Color.WHITE);
 		scoreBoard.setPreferredSize(new Dimension(200, 100));
 		

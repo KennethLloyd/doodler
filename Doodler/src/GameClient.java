@@ -223,7 +223,6 @@ public class GameClient extends JPanel implements Runnable, Constants {
 				String[] data = serverData.split(" ");
 				String pn = data[1];
 				scores = pn.split(";");
-				System.out.println("SCORE SETTING");
 				resScore = true;
 			}
 			else if (connected && serverData.startsWith("ENDGAME")) {
