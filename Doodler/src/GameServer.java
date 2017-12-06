@@ -12,7 +12,7 @@ public class GameServer implements Runnable, Constants {
 	 * Placeholder for the data received from the player
 	 */	 
 	String playerData;
-	String currentPlayer;
+	private String currentPlayer;
 	
 	int turn = 0;
 	
@@ -85,15 +85,16 @@ public class GameServer implements Runnable, Constants {
 			public void actionPerformed(ActionEvent e) {
 				numCorrectPlayers=0;
 				if (turn != numPlayers) {//set next player
+					broadcast("NEWROUND ");
 					turn++;
 				}
 				else {
-					setDoodlerScore(turn,numCorrectPlayers);
 					turn = 1;
 					game.setRound(game.getRound()+1);
 				}
 				if(game.getRound()==MAX_ROUND){//set next round
 					gameStage = END_GAME;
+					timer.stop();
 				}
 				else{
 					do {//get the word to draw
@@ -105,7 +106,7 @@ public class GameServer implements Runnable, Constants {
 					}while(usedWords.contains(currentWord));
 						
 					usedWords.add(currentWord);
-
+					getCurrentPlayerName();
 					notifyPlayers();
 					clearAllCanvas();
 				}
@@ -119,20 +120,9 @@ public class GameServer implements Runnable, Constants {
 				String name=(String)ite.next();
 				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
 				if (turn == player.getStartPos()) {
-					currentPlayer = player.getName();
+					this.currentPlayer = player.getName();
 				}
 		  }
-	}
-	
-	public void checkDoodlerScore(int turn){
-		for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
-			String name=(String)ite.next();
-			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
-			if (turn == player.getStartPos()) {
-				player.setPlace(numCorrectPlayers);
-				player.setScore((MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
-			}
-	  }
 	}
 	public void setDoodlerScore(int turn, int numCorrectPlayers){
 		System.out.println("Entered setting doodler score");
@@ -140,9 +130,9 @@ public class GameServer implements Runnable, Constants {
 			String name=(String)ite.next();
 			NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
 			if (turn == player.getStartPos()) {
-				System.out.println(player.getName());
+				System.out.println("player:"+player.getName());
 				System.out.println(player.getScore());
-				System.out.println(numCorrectPlayers);
+				System.out.println("num of correct players:"+numCorrectPlayers);
 				System.out.println(player.getPlace());
 				player.setPlace(numCorrectPlayers);
 				System.out.println("score MAX:"+MAX_SCORE);
@@ -151,8 +141,16 @@ public class GameServer implements Runnable, Constants {
 				player.setPlace(numCorrectPlayers);
 				System.out.println("score player: "+(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
 				player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
+				System.out.println("new score:"+player.getScore());
 			}
 	  }
+		String scoresTemp = "";
+		  for(Iterator ite=game.getPlayers().keySet().iterator();ite.hasNext();){
+				String name=(String)ite.next();
+				NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
+				scoresTemp += (Integer.toString(player.getScore())+";");
+		  }
+		  broadcast("SCORES " + scoresTemp);
 	}
 	public void notifyPlayers() {
 		//broadcast the current word and notify the players if its already their turn
@@ -284,7 +282,7 @@ public class GameServer implements Runnable, Constants {
 
 			while ((word = br.readLine()) != null) {
 				wordList.add(word);
-				System.out.println(word);
+//				System.out.println(word);
 				i++;
 			}
 
@@ -351,7 +349,6 @@ public class GameServer implements Runnable, Constants {
 							NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
 							player.setPlace((2*numPlayers)-1);
 							player.setScore(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1))));
-							System.out.println(player.getPlace());
 					  }
 					  timer.setInitialDelay(0);
 					  broadcast("GAMESTART ");
@@ -429,17 +426,8 @@ public class GameServer implements Runnable, Constants {
 								String name=(String)ite.next();
 								if (name.equals(pname)) {
 									NetPlayer player=(NetPlayer)game.getPlayers().get(pname);
-									System.out.println(pname);
-									System.out.println(player.getScore());
-									System.out.println(numCorrectPlayers+1);
-									System.out.println(player.getPlace());
 									player.setPlace(numCorrectPlayers+1);
-									System.out.println("score MAX:"+MAX_SCORE);
-									System.out.println("score place:"+player.getPlace());
-									System.out.println("score BASE:"+BASE_SCORE);
-									System.out.println("score guesser: "+(MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
 									player.setScore((MAX_SCORE-((player.getPlace()-1)*(BASE_SCORE/(numPlayers-1)))));
-									System.out.println(player.getScore());
 									
 									numCorrectPlayers+=1;
 									checkIfCorrectAll();
@@ -461,7 +449,7 @@ public class GameServer implements Runnable, Constants {
 							String name=(String)ite.next();
 							
 							NetPlayer player=(NetPlayer)game.getPlayers().get(name);			
-							System.out.println(player.getName()+" : "+player.getScore()); 
+//							System.out.println(player.getName()+" : "+player.getScore()); 
 					  }
 					  gameStage=5;
 					  timer.stop();
@@ -484,6 +472,7 @@ public class GameServer implements Runnable, Constants {
 	public void checkIfCorrectAll() {
 		if (numCorrectPlayers == numPlayers-1) { //all players guessed right
 			numCorrectPlayers = 0;
+			
 			clearAllCanvas();
 			timer.stop();
 			timer.setInitialDelay(0);

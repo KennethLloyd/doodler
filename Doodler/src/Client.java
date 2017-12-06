@@ -57,6 +57,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 
 
 	private int count = 80;
+	private JScrollPane scroll;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -107,49 +108,7 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		timerPanel.add(currentPlayer);
 		
 		mainPanel = new JPanel(new BorderLayout());
-//		JPanel scorePanel = new JPanel(new GridLayout(1,0));
-//		scoreBoard = new ScoreDisplay();
-//		
-//		scoreBoard.setBackground(Color.WHITE);
-//		scoreBoard.setPreferredSize(new Dimension(200, 100));
-//		
-//		JPanel player1Panel = new JPanel();
-//		JPanel player2Panel = new JPanel();
-//		JPanel player3Panel = new JPanel();
-//		
-//		BufferedImage i1 = ImageIO.read(new File("./rsc/char1.jpg"));
-//		BufferedImage i2 = ImageIO.read(new File("./rsc/char2.jpg"));
-//		BufferedImage i3 = ImageIO.read(new File("./rsc/char3.jpg"));
-//		JLabel player1 = new JLabel(new ImageIcon(i1));
-//		JLabel player2 = new JLabel(new ImageIcon(i2));
-//		JLabel player3 = new JLabel(new ImageIcon(i3));
-//		
-//		player1Panel.add(player1);
-//		
-//		player1score = new JLabel("0");
-//		player1Panel.add(new JLabel("PLAYER1: "));
-//		
-//		player1Panel.add(player1score);
-//		player1Panel.setBackground(Color.GRAY);
-//		player2Panel.add(player2);
-//		player2Panel.add(new JLabel("PLAYER2: 100"));
-//		player2Panel.setBackground(Color.WHITE);
-//		player3Panel.add(player3);
-//		player3Panel.add(new JLabel("PLAYER3: 100"));
-//		player3Panel.setBackground(Color.GRAY);
-//		
-//		JPanel player4Panel = new JPanel();
-//		player4Panel.add(player3);
-//		player4Panel.add(new JLabel("PLAYER3: 100"));
-//		player4Panel.setBackground(Color.GREEN);
-//		
-//		scoreBoard.add(player1Panel);
-//		scoreBoard.add(player2Panel);
-//		scoreBoard.add(player3Panel);
-//		scoreBoard.add(player4Panel);
-//		
-		
-		
+
 		try {
 			gc = new GameClient(serverName, un);
 		} catch (Exception e1) {
@@ -269,9 +228,19 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		while (thread != null) {
 			if (gc.endgame == true) {
 				timer.stop();
+				this.stop();
 				time.setText("GAME OVER");
 				time.setFont(new Font("Serif", Font.PLAIN, 30));
 				gc.newRound = false;
+				//gameOver(true);
+				try {
+					gameOver(true);
+				} catch (IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				this.stop();
+				
 			}
 			if (gc.getNewRound() == true) {
 				timer.stop();
@@ -313,18 +282,21 @@ public class Client extends JFrame implements Runnable, ActionListener {
 			System.out.println("Bye");
 			stop();
 		}
-		
-		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !gc.isTurn && ownAnswer == true) {
+		if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !this.gc.isTurn && ownAnswer == true) {
+			if(!gc.getHasGuessed()){
+				ownAnswer = false;
+				gc.sendHasGuessed();
+			}
 			chatArea.append(sub[0]+": CORRECT ANSWER\n");
-			ownAnswer = false;
-			gc.sendHasGuessed();
-			System.out.print("CORRECT");
+		}
+		else if(sub[1].toLowerCase().equals(gc.getWord().toLowerCase()+"\n") && !this.gc.isTurn && ownAnswer == false){
+			chatArea.append(sub[0]+": CORRECT ANSWER\n");
 		}
 		else {
 			//System.out.println(this.chatArea.getText());
 			ownAnswer = false;
 			chatArea.append(msg);
-			System.out.println(msg);
+//			System.out.println(msg);
 		}
 	}
 
@@ -364,13 +336,14 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		JScrollPane sp = new JScrollPane(chatArea);
 		chatArea.setEditable(false);
-		
+		scroll = new JScrollPane(chatArea);
+		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		textArea = new JTextField();
 		textArea.setEditable(true);
 		
 		chatbox = new JPanel(new BorderLayout());
 		
-		chatbox.add(chatArea, BorderLayout.CENTER);
+		chatbox.add(scroll, BorderLayout.CENTER);
 		chatbox.add(textArea, BorderLayout.SOUTH);
 		
 		this.mainPanel.add(chatbox, BorderLayout.EAST);
@@ -417,6 +390,39 @@ public class Client extends JFrame implements Runnable, ActionListener {
 		else if(arg0.getSource().equals(clearButton)){
 			gc.setClearItself(true);
 			gc.clearPane();
+		}
+	}
+	public void gameOver(boolean b) throws IOException {
+		if(b) {
+			JFrame endFrame= new JFrame();
+			endFrame.setPreferredSize(new Dimension(380,300));
+			endFrame.setResizable(false);
+			endFrame.pack();
+			endFrame.setLocationRelativeTo(null);
+			
+			JPanel panel = new JPanel(new GridLayout(4,0));
+			BufferedImage go = ImageIO.read(new File("./rsc/gameover.png"));
+			Image gameover = go.getScaledInstance(150,70,Image.SCALE_SMOOTH);
+			JLabel label1 = new JLabel("", new ImageIcon(gameover), SwingConstants.CENTER);
+			String highScorer = this.scoreBoard.getHighScorer().toUpperCase();
+			highScorer = highScorer.substring(0, highScorer.length()-2);
+//			System.out.println(highScorer);
+			JLabel label2 = new JLabel(highScorer, SwingConstants.CENTER);
+			label2.setFont(new Font("SERIF",Font.BOLD,30));
+			label2.setForeground(Color.RED);
+			JLabel label3 = new JLabel("WINNER:", SwingConstants.CENTER);
+			
+			
+			
+			panel.add(label1);
+			panel.add(label3);
+			panel.add(new JLabel(new ImageIcon(ImageIO.read(new File("./rsc/winner-trophy.gif")))));
+			panel.add(label2);
+			
+			endFrame.add(panel);
+			
+			endFrame.setVisible(true);
+		
 		}
 	}
 

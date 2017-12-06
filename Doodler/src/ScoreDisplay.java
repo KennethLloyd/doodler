@@ -24,7 +24,6 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		this.gc = gc;
 		this.setLayout(new GridLayout(1,0));
 		scoreBoard = new JPanel(new GridLayout(0,1));
-		System.out.println(numPlayers);
 		scoreBoard.setBackground(Color.WHITE);
 		scoreBoard.setPreferredSize(new Dimension(200, 100));
 		
@@ -44,19 +43,34 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		t.start();
 		
 	}
+	public String getHighScorer() {
+		String highScorer = "";
+		int hs = 0;
+		for(int i=1; i<scores.size(); i++) {
+			if(Integer.parseInt(scores.get(i).getText())>Integer.parseInt(scores.get(hs).getText())) {
+				hs = i;
+			}
+		}
+		highScorer = names.get(hs).getText();
+		//System.out.println(highScorer);
+		t.stop();
+		return highScorer;		
+	}
 	public void addToScorePanel(String uname) {
 		JPanel player1Panel = new JPanel();
 		BufferedImage i1=null;
 		try {
-			i1 = ImageIO.read(new File("./rsc/char"+Integer.toString(names.size()+1)+".jpg"));
+			i1 = ImageIO.read(new File("./rsc/char"+Integer.toString(names.size()+1)+".png"));
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		JLabel player1 = new JLabel(new ImageIcon(i1));
+		
 		JLabel player1score = new JLabel("0");
 		JLabel player1name = new JLabel(uname+": ");
-		
+		player1name.setForeground(Color.PINK);
+		player1score.setForeground(Color.GREEN);
 		
 		player1Panel.add(player1);
 		player1Panel.add(player1name);
@@ -68,17 +82,18 @@ public class ScoreDisplay extends JPanel implements Runnable{
 		
 		
 	}
-	public void setScore(int pos) {
-		scores.get(pos).setText("Y");
-	}
-	@Override
 	public void run() {
 		
 		while(true) {
-			System.out.println("from sd: " + gc.getReceivedScore());
+//			System.out.println("from sd: " + gc.getReceivedScore());
+			try {
+				t.sleep(1000);
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			if (gc.getReceivedScore() == true) {
 				for(int i = 0;i<scores.size();i++) {
-					System.out.println("RUN"+gc.scores[i]);
+//					System.out.println("RUN"+gc.scores[i]);
 					scores.get(i).setText(gc.scores[i]);
 				}
 				gc.setReceivedScore(false);

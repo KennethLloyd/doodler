@@ -43,7 +43,13 @@ public class Start implements MouseListener {
 		Image btn = cBtn.getScaledInstance(35,30,Image.SCALE_SMOOTH);
 		Icon i = new ImageIcon(btn);
 		//btnNewButton.setIcon(i);
-		
+		JButton btnTutorial = new JButton("Tutorial");
+		btnTutorial.addMouseListener(new MouseAdapter(){
+			public void mouseClicked(MouseEvent e) {
+				Tutorial t = new Tutorial();
+				
+			}
+		});
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			public void mouseClicked(MouseEvent e) {
 				Client client = null;
@@ -86,6 +92,7 @@ public class Start implements MouseListener {
 		panel.add(unameLbl);
 		panel.add(uname);
 		panel.add(btnNewButton);
+		panel.add(btnTutorial);
 		panel.setOpaque(false);
 		bigPanel.setOpaque(false);
 		space.setOpaque(false);
