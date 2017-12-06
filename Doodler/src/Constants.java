@@ -15,7 +15,7 @@ public interface Constants {
 	public final int MAX_SCORE=100;
 	public final int BASE_SCORE=50;
 	
-	public final int MAX_ROUND = 1;
+	public final int MAX_ROUND = 3;
 	/**
 	 * Game port
 	 */

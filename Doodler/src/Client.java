@@ -57,7 +57,6 @@ public class Client extends JFrame implements Runnable, ActionListener {
 
 
 	private int count = 80;
-	private JScrollPane scroll;
 	/**
 	 * Launch the application.
 	 * @param args
@@ -336,14 +335,13 @@ public class Client extends JFrame implements Runnable, ActionListener {
 	            BorderFactory.createEmptyBorder(5, 5, 5, 5)));
 		JScrollPane sp = new JScrollPane(chatArea);
 		chatArea.setEditable(false);
-		scroll = new JScrollPane(chatArea);
-		scroll.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
+		sp.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_ALWAYS);
 		textArea = new JTextField();
 		textArea.setEditable(true);
 		
 		chatbox = new JPanel(new BorderLayout());
 		
-		chatbox.add(scroll, BorderLayout.CENTER);
+		chatbox.add(sp, BorderLayout.CENTER);
 		chatbox.add(textArea, BorderLayout.SOUTH);
 		
 		this.mainPanel.add(chatbox, BorderLayout.EAST);
